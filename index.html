@@ -1,0 +1,2775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Campaign – noon Partners</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow:       #F5D200;
+    --yellow-hover: #e0be00;
+    --dark:         #1C1C28;
+    --navy:         #2B2D42;
+    --blue:         #4361EE;
+    --blue-light:   #EEF1FF;
+    --blue-mid:     #d6dcfb;
+    --green:        #00875A;
+    --red:          #D32F2F;
+    --red-light:    #FDECEA;
+    --orange:       #E65100;
+    --border:       #E4E7EF;
+    --border-mid:   #C9CDD8;
+    --bg:           #F5F7FC;
+    --white:        #FFFFFF;
+    --text:         #1C1C28;
+    --text-2:       #4A4F6A;
+    --text-3:       #8C93A8;
+    --sidebar-w:    0px;
+    --topbar-h:     50px;
+    --font:         'Figtree', sans-serif;
+    --r:            8px;
+    --r-sm:         5px;
+    --sh:           0 1px 3px rgba(0,0,0,0.06);
+    --sh-md:        0 2px 10px rgba(0,0,0,0.09);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.5; min-height: 100vh; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0px; right: 0;
+    height: var(--topbar-h); background: var(--white);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 16px; gap: 8px;
+    z-index: 100; box-shadow: var(--sh);
+  }
+  .tb-hamburger {
+    display: flex; flex-direction: column; gap: 4px; cursor: pointer;
+    padding: 4px; border-radius: 4px; transition: background 0.15s;
+  }
+  .tb-hamburger:hover { background: var(--bg); }
+  .tb-hamburger span { display: block; width: 15px; height: 1.5px; background: var(--text-2); border-radius: 2px; }
+  .tb-store {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500; color: var(--text-2);
+  }
+  .tb-store-id { font-weight: 700; color: var(--text); }
+  .tb-sep { color: var(--text-3); }
+  .tb-store-name { color: var(--text-2); }
+  .tb-store svg { width: 12px; height: 12px; stroke: var(--text-3); fill: none; stroke-width: 2.5; }
+  .tb-search {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r-sm); padding: 6px 11px;
+    width: 200px; transition: border-color 0.15s;
+  }
+  .tb-search:focus-within { border-color: var(--blue); }
+  .tb-search svg { width: 13px; height: 13px; stroke: var(--text-3); fill: none; stroke-width: 2; flex-shrink: 0; }
+  .tb-search input { border: none; background: none; font-size: 12px; font-family: var(--font); color: var(--text); outline: none; width: 100%; }
+  .tb-search input::placeholder { color: var(--text-3); }
+  .tb-right { margin-left: auto; display: flex; align-items: center; gap: 2px; }
+  .tb-icon {
+    width: 30px; height: 30px; border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-2); position: relative;
+    transition: background 0.15s; border: none; background: none;
+  }
+  .tb-icon:hover { background: var(--bg); }
+  .tb-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .tb-dot {
+    position: absolute; top: 4px; right: 4px; width: 7px; height: 7px;
+    background: var(--red); border-radius: 50%; border: 1.5px solid var(--white);
+  }
+  .tb-dot.yellow { background: var(--yellow); }
+  .tb-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--navy); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 4px;
+  }
+
+  /* ── PAGE LAYOUT ── */
+  .page {
+    margin-left: 52px; margin-top: var(--topbar-h);
+    padding: 22px 28px 100px; max-width: 960px;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .ph-left { display: flex; align-items: center; gap: 8px; }
+  .ph-title { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
+  .ph-badge {
+    background: var(--blue-light); color: var(--blue);
+    font-size: 10px; font-weight: 700; padding: 2px 9px;
+    border-radius: 20px; letter-spacing: 0.2px;
+  }
+  .ph-right { display: flex; align-items: center; gap: 10px; }
+  .ph-step-text { font-size: 12px; color: var(--text-2); font-weight: 500; }
+  .ph-progress {
+    width: 130px; height: 5px; background: var(--border);
+    border-radius: 99px; overflow: hidden;
+  }
+  .ph-progress-fill {
+    height: 100%; width: 60%; background: var(--blue); border-radius: 99px;
+  }
+
+  /* ── SECTION CARD ── */
+  .card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 20px 22px;
+    margin-bottom: 14px; box-shadow: var(--sh);
+  }
+  .card-title {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+  }
+  .card-title .req { color: var(--red); font-weight: 700; }
+  .card-sub { font-size: 12px; color: var(--text-3); margin-bottom: 16px; }
+
+  /* ── INFO ICON ── */
+  .info-icon {
+    width: 15px; height: 15px; border-radius: 50%;
+    border: 1.5px solid var(--text-3); color: var(--text-3);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 9px; font-style: italic; font-weight: 800;
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  }
+  .info-icon:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── SELLER SELECTION ── */
+  .seller-input-row {
+    display: flex; gap: 8px; align-items: flex-end; margin-bottom: 4px;
+  }
+  .field-group { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .field-label {
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    letter-spacing: 0.3px;
+  }
+  .field-input {
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    padding: 8px 11px; font-size: 13px; font-family: var(--font);
+    color: var(--text); outline: none; transition: border-color 0.15s;
+    background: var(--white);
+  }
+  .field-input::placeholder { color: var(--text-3); }
+  .field-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(67,97,238,0.08); }
+
+  /* Add Seller button — matches image: outlined blue */
+  .btn-add-seller {
+    display: flex; align-items: center; gap: 5px;
+    padding: 8px 14px; border-radius: var(--r-sm);
+    border: 1px solid var(--blue); color: var(--blue);
+    background: var(--white); font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: var(--font); white-space: nowrap;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .btn-add-seller:hover { background: var(--blue-light); }
+  .btn-add-seller svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+  /* Seller tags */
+  .seller-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .seller-tag {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--blue-light); border: 1px solid var(--blue-mid);
+    border-radius: var(--r-sm); padding: 4px 10px;
+    font-size: 12px; font-weight: 500; color: var(--blue);
+  }
+  .seller-tag-x {
+    cursor: pointer; font-size: 14px; color: var(--blue);
+    line-height: 1; opacity: 0.6; transition: opacity 0.15s;
+    border: none; background: none; padding: 0;
+    font-family: var(--font);
+  }
+  .seller-tag-x:hover { opacity: 1; }
+
+  /* Validation message */
+  .field-error {
+    font-size: 11px; color: var(--red); margin-top: 4px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .field-error svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+  /* ── PLACEHOLDER SECTIONS (for sections not yet built) ── */
+  .placeholder-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 18px 22px;
+    margin-bottom: 14px; opacity: 0.5;
+  }
+  .placeholder-title {
+    font-size: 14px; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .placeholder-body {
+    margin-top: 12px; height: 36px; background: var(--bg);
+    border-radius: var(--r-sm); border: 1.5px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .placeholder-body span { font-size: 11px; color: var(--text-3); }
+
+  /* ── FOOTER ── */
+  .footer {
+    position: fixed; bottom: 0; left: var(--sidebar-w); right: 0;
+    background: var(--white); border-top: 1px solid var(--border);
+    padding: 12px 28px; display: flex; align-items: center;
+    justify-content: flex-end; gap: 8px; z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  }
+  .btn-cancel {
+    padding: 8px 16px; border-radius: var(--r-sm);
+    border: 1px solid var(--border); color: var(--text-2);
+    background: var(--white); font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-cancel:hover { border-color: var(--text-2); color: var(--text); }
+  .btn-draft {
+    padding: 8px 16px; border-radius: var(--r-sm);
+    border: 1px solid var(--blue); color: var(--blue);
+    background: var(--white); font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-draft:hover { background: var(--blue-light); }
+  .btn-launch {
+    padding: 8px 20px; border-radius: var(--r-sm);
+    background: var(--blue); color: white; border: none;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-launch:hover { background: #3451d1; }
+
+  /* ── TOOLTIP ── */
+  .tooltip-wrap { position: relative; display: inline-flex; }
+  .tooltip-box {
+    display: none; position: absolute; top: 22px; left: 0;
+    background: var(--dark); color: white; font-size: 11px;
+    padding: 8px 12px; border-radius: var(--r-sm); width: 240px;
+    box-shadow: var(--sh-md); z-index: 300; line-height: 1.5;
+    font-weight: 400;
+  }
+  .tooltip-box::before {
+    content: ''; position: absolute; top: -5px; left: 10px;
+    border: 5px solid transparent; border-bottom-color: var(--dark);
+    border-top: none;
+  }
+  .tooltip-wrap:hover .tooltip-box { display: block; }
+
+  /* ── TABS (Manual / Bulk Upload) ── */
+  .tab-bar {
+    display: flex; gap: 0; margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px 9px; font-size: 12px; font-weight: 600;
+    cursor: pointer; color: var(--text-3);
+    border: none; background: none; font-family: var(--font);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text-2); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ── PRODUCT SPLIT LAYOUT ── */
+  .product-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+
+  /* ── PRODUCT PANEL (left / right shared) ── */
+  .prod-panel {
+    border: 1px solid var(--border); border-radius: var(--r);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .prod-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 12px; background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    text-transform: uppercase; letter-spacing: 0.4px; flex-shrink: 0;
+  }
+  .prod-panel-header .count-badge {
+    background: var(--blue); color: white;
+    font-size: 10px; font-weight: 700; padding: 1px 7px;
+    border-radius: 99px;
+  }
+
+  /* Search + filter bar */
+  .prod-search-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .prod-search {
+    display: flex; align-items: center; gap: 6px; flex: 1;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r-sm); padding: 5px 9px;
+    transition: border-color 0.15s;
+  }
+  .prod-search:focus-within { border-color: var(--blue); }
+  .prod-search svg { width: 12px; height: 12px; stroke: var(--text-3); fill: none; stroke-width: 2; flex-shrink: 0; }
+  .prod-search input { border: none; background: none; font-size: 12px; font-family: var(--font); color: var(--text); outline: none; width: 100%; }
+  .prod-search input::placeholder { color: var(--text-3); }
+
+  .btn-filter {
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 10px; border-radius: var(--r-sm);
+    border: 1px solid var(--border); background: var(--white);
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-filter:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-filter svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* Product list */
+  .prod-list { overflow-y: auto; max-height: 300px; flex: 1; }
+  .prod-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    transition: background 0.1s; cursor: default;
+  }
+  .prod-item:last-child { border-bottom: none; }
+  .prod-item:hover { background: #fafbff; }
+
+  /* Product thumbnail */
+  .prod-thumb {
+    width: 34px; height: 34px; border-radius: 5px; flex-shrink: 0;
+    background: linear-gradient(135deg, #f0f3ff, #e6ebff);
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+  }
+  .prod-thumb svg { width: 16px; height: 16px; stroke: var(--text-3); fill: none; stroke-width: 1.5; }
+
+  .prod-info { flex: 1; min-width: 0; }
+  .prod-name {
+    font-size: 11px; font-weight: 500; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    line-height: 1.4;
+  }
+  .prod-meta { display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+  .prod-price { font-size: 11px; color: var(--text-2); font-weight: 500; }
+  .prod-badge {
+    font-size: 9px; font-weight: 700; padding: 1px 5px;
+    border-radius: 3px; background: #FFF3E0; color: var(--orange);
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+
+  /* Add / Remove action buttons */
+  .prod-action {
+    width: 24px; height: 24px; border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: none; flex-shrink: 0; transition: all 0.15s;
+  }
+  .prod-action svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+  .prod-action.add { background: var(--blue-light); color: var(--blue); }
+  .prod-action.add:hover { background: var(--blue); color: white; }
+  .prod-action.remove { background: var(--red-light); color: var(--red); }
+  .prod-action.remove:hover { background: var(--red); color: white; }
+
+  /* Right panel empty state */
+  .prod-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px 16px; text-align: center; gap: 6px;
+  }
+  .prod-empty svg { width: 28px; height: 28px; stroke: var(--text-3); fill: none; stroke-width: 1.5; }
+  .prod-empty p { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+
+  /* ── BULK UPLOAD PANEL ── */
+  .bulk-template-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .bulk-template-icon {
+    width: 30px; height: 30px; border-radius: 5px;
+    background: #E8F5E9; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .bulk-template-icon svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; }
+  .bulk-template-info { flex: 1; }
+  .bulk-template-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .bulk-template-size { font-size: 11px; color: var(--text-3); }
+  .btn-download {
+    display: flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: var(--r-sm);
+    border: 1px solid var(--border); background: var(--white);
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-download:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-download svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+  /* Drop zone */
+  .drop-zone {
+    margin: 14px 14px 0;
+    border: 2px dashed var(--border-mid); border-radius: var(--r);
+    padding: 28px 16px; text-align: center; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--blue); background: var(--blue-light);
+  }
+  .drop-zone-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--blue-light); display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 10px;
+  }
+  .drop-zone-icon svg { width: 18px; height: 18px; stroke: var(--blue); fill: none; stroke-width: 2; }
+  .drop-zone p { font-size: 12px; color: var(--text-3); line-height: 1.6; }
+  .drop-zone a { color: var(--blue); font-weight: 600; text-decoration: none; }
+  .drop-zone small { font-size: 10px; color: var(--text-3); }
+  .drop-zone input[type="file"] { display: none; }
+
+  /* OR divider */
+  .or-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 12px 14px; font-size: 11px; color: var(--text-3);
+  }
+  .or-divider::before, .or-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* SKU paste area */
+  .paste-label { font-size: 11px; font-weight: 600; color: var(--text-2); padding: 0 14px; margin-bottom: 5px; }
+  .paste-area {
+    width: calc(100% - 28px); margin: 0 14px;
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    padding: 8px 10px; font-size: 12px; font-family: var(--font);
+    color: var(--text); resize: none; height: 72px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .paste-area:focus { border-color: var(--blue); }
+  .paste-area::placeholder { color: var(--text-3); }
+
+  .btn-add-products {
+    display: flex; align-items: center; gap: 5px;
+    margin: 8px 14px 14px auto; padding: 6px 14px;
+    border-radius: var(--r-sm); background: var(--blue); color: white;
+    border: none; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-add-products:hover { background: #3451d1; }
+  .btn-add-products svg { width: 12px; height: 12px; stroke: white; fill: none; stroke-width: 2.5; }
+
+  /* Uploaded file state */
+  .uploaded-file {
+    display: none; margin: 12px 14px 0;
+    background: #E8F5E9; border: 1px solid #A5D6A7;
+    border-radius: var(--r-sm); padding: 8px 12px;
+    align-items: center; gap: 8px;
+  }
+  .uploaded-file.show { display: flex; }
+  .uploaded-file svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; flex-shrink: 0; }
+  .uploaded-file-name { flex: 1; font-size: 12px; font-weight: 600; color: var(--green); }
+  .btn-remove-file {
+    font-size: 11px; color: var(--red); cursor: pointer;
+    border: none; background: none; font-family: var(--font);
+    font-weight: 600; transition: opacity 0.15s;
+  }
+  .btn-remove-file:hover { opacity: 0.7; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+
+  /* ── PRICING MODEL ── */
+  .pricing-options { display: flex; gap: 10px; margin-top: 4px; }
+  .pricing-card {
+    flex: 1; border: 1.5px solid var(--border); border-radius: var(--r);
+    padding: 14px 16px; cursor: pointer; transition: all 0.18s;
+    background: var(--white); position: relative;
+  }
+  .pricing-card:hover { border-color: var(--blue); }
+  .pricing-card.selected { border-color: var(--blue); background: var(--blue-light); }
+  .pricing-card.disabled {
+    opacity: 0.45; cursor: not-allowed; pointer-events: none;
+    background: var(--bg);
+  }
+  .pricing-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .pricing-card-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .pricing-radio {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-mid); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .pricing-card.selected .pricing-radio { border-color: var(--blue); background: var(--blue); }
+  .pricing-radio-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: white; display: none;
+  }
+  .pricing-card.selected .pricing-radio-dot { display: block; }
+  .pricing-card-desc { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+  .pricing-soon-badge {
+    display: inline-block; font-size: 9px; font-weight: 700;
+    background: #FFF3E0; color: var(--orange);
+    padding: 1px 6px; border-radius: 3px; margin-left: 6px;
+    letter-spacing: 0.3px; text-transform: uppercase; vertical-align: middle;
+  }
+
+
+  /* ── BIDDING STRATEGY ── */
+  .bidding-options { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+
+  .bid-card {
+    border: 1.5px solid var(--border); border-radius: var(--r);
+    padding: 14px 16px; cursor: pointer; transition: all 0.18s;
+    background: var(--white); display: flex; align-items: flex-start; gap: 14px;
+  }
+  .bid-card:hover { border-color: var(--blue); }
+  .bid-card.selected { border-color: var(--blue); background: var(--blue-light); }
+
+  .bid-radio {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-mid); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px; transition: all 0.15s;
+  }
+  .bid-card.selected .bid-radio { border-color: var(--blue); background: var(--blue); }
+  .bid-radio-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: white; display: none;
+  }
+  .bid-card.selected .bid-radio-dot { display: block; }
+
+  .bid-body { flex: 1; min-width: 0; }
+  .bid-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .bid-desc  { font-size: 11.5px; color: var(--text-2); line-height: 1.55; margin-bottom: 4px; }
+  .bid-example {
+    font-size: 11px; color: var(--text-3); line-height: 1.4;
+    background: rgba(0,0,0,0.03); border-radius: 4px;
+    padding: 5px 8px; border-left: 2px solid var(--border-mid);
+  }
+  .bid-card.selected .bid-example { border-left-color: var(--blue); }
+
+  /* 4.1 — Title row with Recommended badge */
+  .bid-title-row {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 4px;
+  }
+  .bid-title-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .bid-recommended-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px;
+    border-radius: 99px; background: #E6F4EF; color: var(--green);
+    border: 1px solid #B7DFCF; letter-spacing: 0.2px; white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* 4.5 — Strategy hint pill — same size as recommended badge */
+  .bid-strategy-hint {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; color: #B7860A;
+    background: #FFFBEA; border: 1px solid #F5D200;
+    padding: 2px 8px; border-radius: 99px; flex-shrink: 0;
+    letter-spacing: 0.2px; white-space: nowrap;
+  }
+  .bid-strategy-hint svg {
+    width: 9px; height: 9px; stroke: currentColor;
+    fill: none; stroke-width: 2.5; flex-shrink: 0;
+  }/* ── TARGETING ── */
+  .tgt-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 0; cursor: pointer;
+  }
+  .tgt-row + .tgt-row { border-top: 1px solid var(--border); }
+  .tgt-radio {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-mid); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px; transition: all 0.15s;
+  }
+  .tgt-radio.on { border-color: var(--blue); background: var(--blue); }
+  .tgt-radio-dot { width: 6px; height: 6px; border-radius: 50%; background: white; display: none; }
+  .tgt-radio.on .tgt-radio-dot { display: block; }
+  .tgt-row-body h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .tgt-row-body p  { font-size: 11.5px; color: var(--text-2); line-height: 1.55; }
+
+  /* Expanded content box — blue border */
+  .tgt-expand-box {
+    border: 1.5px solid var(--blue); border-radius: var(--r);
+    padding: 16px; margin-top: 0; display: none;
+  }
+  .tgt-expand-box.open { display: block; }
+
+  /* Auto — underline link tabs */
+  .auto-link-tabs { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .auto-link-tab {
+    padding: 5px 0; margin-right: 20px; font-size: 12px; font-weight: 600;
+    border: none; background: none; cursor: pointer; font-family: var(--font);
+    color: var(--text-3); border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .auto-link-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* Bid amount field */
+  .bid-field-wrap { display: flex; flex-direction: column; gap: 4px; max-width: 180px; }
+  .bid-field-label { font-size: 11px; font-weight: 600; color: var(--text-2); }
+  .bid-field-input-row { display: flex; align-items: center; }
+  .bid-prefix {
+    padding: 7px 10px; background: var(--bg); border: 1px solid var(--border);
+    border-right: none; border-radius: var(--r-sm) 0 0 var(--r-sm);
+    font-size: 12px; color: var(--text-2);
+  }
+  .bid-inp {
+    border: 1px solid var(--border); border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: 7px 9px; font-size: 12px; font-family: var(--font);
+    color: var(--text); outline: none; width: 90px; transition: border-color 0.15s;
+  }
+  .bid-inp:focus { border-color: var(--blue); }
+  .bid-hint { font-size: 10.5px; color: var(--text-3); }
+
+  /* Placement tab — toggle rows */
+  .placement-row {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .placement-row:last-child { border-bottom: none; }
+  .placement-row-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .placement-row-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  /* Toggle switch */
+  .tog {
+    width: 32px; height: 18px; border-radius: 99px;
+    background: var(--blue); cursor: pointer; position: relative;
+    border: none; flex-shrink: 0; transition: background 0.2s;
+  }
+  .tog.off { background: var(--border-mid); }
+  .tog::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%; background: white;
+    transition: transform 0.2s;
+  }
+  .tog.off::after { transform: translateX(0); }
+  .tog:not(.off)::after { transform: translateX(14px); }
+  .placement-range { font-size: 10.5px; color: var(--text-3); margin-top: 3px; }
+  .placement-range a { color: var(--blue); text-decoration: none; font-weight: 600; }
+
+  /* Manual expand */
+  .manual-expand-inner { display: flex; gap: 14px; }
+
+  /* Keywords/Categories tabs */
+  .kw-cat-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+  .kw-cat-tab {
+    padding: 7px 14px 8px; font-size: 12.5px; font-weight: 700;
+    border: none; background: none; cursor: pointer; color: var(--text-3);
+    font-family: var(--font); border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all 0.15s;
+  }
+  .kw-cat-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* AI Rec / Manual Upload tabs */
+  .kw-src-tabs { display: flex; border-bottom: 1px solid var(--border); }
+  .kw-src-tab {
+    padding: 6px 12px 7px; font-size: 11px; font-weight: 600;
+    border: none; background: none; cursor: pointer; color: var(--text-3);
+    font-family: var(--font); border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all 0.15s;
+  }
+  .kw-src-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* Search + sort row */
+  .kw-search-sort {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 10px; border-bottom: 1px solid var(--border);
+  }
+  .kw-srch {
+    display: flex; align-items: center; gap: 5px; flex: 1;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r-sm); padding: 5px 8px;
+  }
+  .kw-srch svg { width: 11px; height: 11px; stroke: var(--text-3); fill: none; stroke-width: 2; }
+  .kw-srch input {
+    border: none; background: none; font-size: 11.5px;
+    font-family: var(--font); color: var(--text); outline: none; width: 100%;
+  }
+  .kw-srch input::placeholder { color: var(--text-3); }
+  .kw-sort-btn {
+    display: flex; align-items: center; gap: 3px; white-space: nowrap;
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    border: none; background: none; font-family: var(--font); cursor: pointer;
+  }
+  .kw-sort-btn svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+  /* Keyword row in left panel */
+  .kw-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 10px; border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .kw-row:hover { background: #fafbff; }
+  .kw-row-info { flex: 1; min-width: 0; }
+  .kw-row-name { font-size: 11.5px; font-weight: 500; color: var(--text); }
+  .kw-row-vol  { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+  .kw-pill {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 3px;
+    cursor: pointer; border: 1px solid; transition: all 0.15s; white-space: nowrap;
+  }
+  .kw-pill.exact  { color: #1565C0; border-color: #90CAF9; background: #E3F2FD; }
+  .kw-pill.exact:hover  { background: #1565C0; color: white; }
+  .kw-pill.phrase { color: #6A1B9A; border-color: #CE93D8; background: #F3E5F5; }
+  .kw-pill.phrase:hover { background: #6A1B9A; color: white; }
+
+  /* Manual upload textarea */
+  .kw-paste-box {
+    width: 100%; border: none; resize: none; height: 110px;
+    padding: 10px; font-size: 11.5px; font-family: var(--font);
+    color: var(--text); outline: none;
+  }
+  .kw-paste-footer {
+    padding: 6px 10px; border-top: 1px solid var(--border);
+    display: flex; justify-content: flex-end;
+  }
+  .btn-kw-add {
+    padding: 5px 14px; border-radius: var(--r-sm);
+    background: var(--blue); color: white; border: none;
+    font-size: 11px; font-weight: 600; cursor: pointer;
+    font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-kw-add:hover { background: #3451d1; }
+
+  /* Right panel */
+  .kw-right-panel { border: 1px solid var(--border); border-radius: var(--r); display: flex; flex-direction: column; }
+  .kw-right-top {
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    background: var(--bg); border-radius: var(--r) var(--r) 0 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .kw-right-filter-tabs { display: flex; gap: 0; }
+  .kw-right-filter-tab {
+    padding: 3px 10px 4px; font-size: 11px; font-weight: 600;
+    border: none; background: none; cursor: pointer; color: var(--text-3);
+    font-family: var(--font); border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .kw-right-filter-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .kw-right-actions { display: flex; align-items: center; gap: 6px; }
+  .kw-right-actions button {
+    font-size: 11px; color: var(--text-2); border: none; background: none;
+    cursor: pointer; font-family: var(--font); font-weight: 600;
+  }
+  .kw-right-actions .sep { color: var(--border-mid); font-size: 13px; }
+  .kw-right-body { overflow-y: auto; max-height: 260px; flex: 1; }
+
+  /* Added kw row */
+  .added-kw-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+  }
+  .added-kw-row:last-child { border-bottom: none; }
+  .added-kw-badge {
+    font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+    text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap;
+  }
+  .added-kw-badge.cat    { background: #F3E5F5; color: #6A1B9A; }
+  .added-kw-badge.kw     { background: #E8F5E9; color: #1B5E20; }
+  .added-kw-badge.phrase { background: #E3F2FD; color: #1565C0; }
+  .added-kw-info { flex: 1; min-width: 0; }
+  .added-kw-name { font-size: 11.5px; font-weight: 600; color: var(--text); }
+  .added-kw-sub  { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+  .added-kw-bid-inp {
+    width: 72px; border: 1px solid var(--border); border-radius: var(--r-sm);
+    padding: 4px 7px; font-size: 11px; font-family: var(--font);
+    color: var(--text); outline: none; text-align: right; transition: border-color 0.15s;
+  }
+  .added-kw-bid-inp:focus { border-color: var(--blue); }
+  .kw-del-btn {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--red-light); color: var(--red); border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; line-height: 1; flex-shrink: 0; transition: all 0.15s;
+  }
+  .kw-del-btn:hover { background: var(--red); color: white; }
+  .kw-right-empty {
+    padding: 28px 16px; text-align: center;
+    font-size: 11px; color: var(--text-3); line-height: 1.6;
+  }
+  .left-panel-wrap { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; flex: 1; display: flex; flex-direction: column; }
+  .left-panel-list { overflow-y: auto; max-height: 240px; }
+
+
+  /* ── TARGETING — Card-style tabs matching Section 2 ── */
+  .tgt-tab-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .tgt-tab-btn {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 3px; padding: 12px 14px; cursor: pointer;
+    border: 1.5px solid var(--border); border-radius: var(--r);
+    background: var(--white); font-family: var(--font);
+    transition: all 0.18s; text-align: left;
+  }
+  .tgt-tab-btn:hover { border-color: var(--blue); background: var(--white); }
+  .tgt-tab-btn.active {
+    border-color: var(--blue); background: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(67,97,238,0.08);
+  }
+  .tgt-tab-btn.active:hover { background: var(--blue-light); }
+  .tgt-tab-top { display: flex; align-items: center; gap: 7px; }
+  .tgt-tab-top svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .tgt-tab-title { font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .tgt-tab-btn.active .tgt-tab-title { color: var(--blue); }
+  .tgt-tab-desc { font-size: 11px; color: var(--text-3); line-height: 1.4; padding-left: 22px; }
+  .tgt-tab-btn.active .tgt-tab-desc { color: #6d84f0; }
+
+  /* Content panels */
+  .tgt-panel { display: none; }
+  .tgt-panel.active { display: block; }
+
+  /* Auto panel description */
+  .tgt-auto-desc {
+    font-size: 12px; color: var(--text-2); line-height: 1.6;
+    margin-bottom: 14px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Set Default Bid sub-header — 5.3 */
+  .tgt-bid-header { margin-bottom: 10px; }
+  .tgt-bid-header h5 {
+    font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px;
+  }
+  .tgt-bid-header p { font-size: 11px; color: var(--text-3); }
+
+  /* Pill toggle for bid mode — Option 1 */
+  .bid-mode-toggle {
+    display: inline-flex; border: 1px solid var(--border);
+    border-radius: var(--r-sm); overflow: hidden; margin-bottom: 16px;
+  }
+  .bid-mode-btn {
+    padding: 7px 16px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: none; background: var(--white);
+    font-family: var(--font); color: var(--text-3);
+    transition: all 0.15s; border-right: 1px solid var(--border);
+  }
+  .bid-mode-btn:last-child { border-right: none; }
+  .bid-mode-btn.active { background: var(--blue); color: var(--white); }
+  .bid-mode-btn:hover:not(.active) { background: var(--blue-light); color: var(--blue); }
+
+  /* 5.7 — Bid mode radio cards matching Section 4 */
+  .bid-mode-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .bid-mode-card {
+    border: 1.5px solid var(--border); border-radius: var(--r);
+    padding: 12px 16px; cursor: pointer; transition: all 0.18s;
+    background: var(--white); display: flex; align-items: flex-start; gap: 12px;
+  }
+  .bid-mode-card:hover { border-color: var(--blue); }
+  .bid-mode-card.selected { border-color: var(--blue); background: var(--white); }
+  .bid-mode-radio {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-mid); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px; transition: all 0.15s;
+  }
+  .bid-mode-card.selected .bid-mode-radio { border-color: var(--blue); background: var(--blue); }
+  .bid-mode-radio-dot { width: 6px; height: 6px; border-radius: 50%; background: white; display: none; }
+  .bid-mode-card.selected .bid-mode-radio-dot { display: block; }
+  .bid-mode-body { flex: 1; }
+  .bid-mode-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .bid-mode-desc { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+  .bid-mode-card.selected .bid-mode-title { color: var(--text); }
+
+  /* Bid mode expand content */
+  .bid-mode-expand { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-mid); }
+  .bid-mode-card.selected .bid-mode-expand { display: block; }
+
+  /* Bid panes */
+  .bid-mode-pane { display: none; }
+  .bid-mode-pane.active { display: block; }
+
+  /* 5.1 — Constrained bid field */
+  .bid-field-wrap { display:flex; flex-direction:column; gap:4px; max-width:180px; }
+  .bid-field-label { font-size:11px; font-weight:600; color:var(--text-2); }
+  .bid-field-row { display:flex; align-items:center; }
+  .bid-pfx { padding:7px 10px; background:var(--bg); border:1px solid var(--border); border-right:none; border-radius:var(--r-sm) 0 0 var(--r-sm); font-size:12px; color:var(--text-2); }
+  .bid-inp { border:1px solid var(--border); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:7px 9px; font-size:12px; font-family:var(--font); color:var(--text); outline:none; width:90px; transition:border-color 0.15s; }
+  .bid-inp:focus { border-color:var(--blue); }
+  .bid-inp:disabled { background:var(--bg); color:var(--text-3); cursor:not-allowed; }
+  .bid-pfx.disabled { opacity: 0.5; }
+  .bid-hint { font-size:10.5px; color:var(--text-3); margin-top:3px; }
+
+  /* 5.8 — Two-column placement layout, no boxes */
+  .plc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 4px; }
+  .plc-col { display: flex; flex-direction: column; gap: 8px; transition: opacity 0.2s; }
+  .plc-col.disabled { opacity: 0.4; pointer-events: none; }
+  .plc-col-label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700; color: var(--text);
+    cursor: pointer;
+  }
+  .plc-col-label input[type=checkbox] { accent-color: var(--blue); width: 14px; height: 14px; cursor: pointer; }
+  .plc-col-body { display: flex; flex-direction: column; gap: 4px; }
+  .plc-why { font-size: 11px; color: var(--blue); text-decoration: underline; font-weight: 600; }
+
+  /* 5.6 — Range hint more prominent */
+  .plc-range {
+    font-size: 11px; color: var(--text-2); margin-top: 6px;
+    display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  }
+  .plc-range-vals {
+    font-weight: 700; color: var(--blue);
+    background: var(--blue-light); padding: 1px 7px;
+    border-radius: 3px; font-size: 11px;
+  }
+  /* 5.5 — Why this range link */
+  .plc-range a {
+    color: var(--blue); text-decoration: underline;
+    font-weight: 600; font-size: 11px;
+  }
+
+  /* Manual panel description */
+  .tgt-manual-desc {
+    font-size: 12px; color: var(--text-2); line-height: 1.6;
+    margin-bottom: 14px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Manual expand two-col */
+  .manual-cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  /* Left panel wrapper */
+  .left-panel-box { border:1px solid var(--border); border-radius:var(--r); overflow:hidden; display:flex; flex-direction:column; }
+
+  /* Pill tab toggle (Keywords | Categories) */
+  .pill-tabs { display:flex; gap:0; padding:8px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .pill-tab {
+    flex:1; padding:7px 10px; font-size:12px; font-weight:600; text-align:center;
+    border:1px solid var(--border); background:var(--white); cursor:pointer;
+    font-family:var(--font); color:var(--text-3); transition:all 0.15s; position:relative;
+  }
+  .pill-tab:first-child { border-radius:var(--r-sm) 0 0 var(--r-sm); border-right:none; }
+  .pill-tab:last-child  { border-radius:0 var(--r-sm) var(--r-sm) 0; }
+  .pill-tab.active { background:var(--blue-light); color:var(--blue); border-color:var(--blue); }
+
+  /* Sub-source tabs (AI Recommended | Manual Upload) */
+  .src-tabs { display:flex; border-bottom:1px solid var(--border); }
+  .src-tab { padding:6px 12px 7px; font-size:11px; font-weight:600; border:none; background:none; cursor:pointer; color:var(--text-3); font-family:var(--font); border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.15s; }
+  .src-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+
+  /* Search + sort row */
+  .kw-search-sort { display:flex; align-items:center; gap:6px; padding:7px 10px; border-bottom:1px solid var(--border); }
+  .kw-srch { display:flex; align-items:center; gap:5px; flex:1; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-sm); padding:5px 8px; }
+  .kw-srch svg { width:11px; height:11px; stroke:var(--text-3); fill:none; stroke-width:2; }
+  .kw-srch input { border:none; background:none; font-size:11.5px; font-family:var(--font); color:var(--text); outline:none; width:100%; }
+  .kw-srch input::placeholder { color:var(--text-3); }
+  .sort-btn { display:flex; align-items:center; gap:3px; white-space:nowrap; font-size:11px; font-weight:600; color:var(--text-2); border:none; background:none; font-family:var(--font); cursor:pointer; }
+  .sort-btn svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2.5; }
+
+  /* Keyword row (left) */
+  .kw-row { display:flex; align-items:center; gap:6px; padding:8px 10px; border-bottom:1px solid var(--border); transition:background 0.1s; }
+  .kw-row:hover { background:#fafbff; }
+  .kw-row:last-child { border-bottom:none; }
+  .kw-row-info { flex:1; min-width:0; }
+  .kw-row-name { font-size:11.5px; font-weight:500; color:var(--text); }
+  .kw-row-vol  { font-size:10px; color:var(--text-3); margin-top:1px; }
+  .kw-pill { font-size:10px; font-weight:700; padding:3px 8px; border-radius:3px; cursor:pointer; border:1px solid; transition:all 0.15s; white-space:nowrap; }
+  .kw-pill.exact  { color:#1565C0; border-color:#90CAF9; background:#E3F2FD; }
+  .kw-pill.exact:hover  { background:#1565C0; color:white; }
+  .kw-pill.phrase { color:#6A1B9A; border-color:#CE93D8; background:#F3E5F5; }
+  .kw-pill.phrase:hover { background:#6A1B9A; color:white; }
+
+  /* Category row (left) */
+  .cat-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border); transition:background 0.1s; }
+  .cat-row:hover { background:#fafbff; }
+  .cat-row:last-child { border-bottom:none; }
+  .cat-chevron { font-size:11px; color:var(--text-3); cursor:pointer; width:14px; flex-shrink:0; }
+  .cat-name { flex:1; font-size:12px; font-weight:500; color:var(--text); }
+  .cat-refine {
+    display:flex; align-items:center; gap:3px; padding:4px 10px;
+    border:1px solid var(--border); border-radius:var(--r-sm);
+    font-size:11px; font-weight:600; color:var(--text-2);
+    background:var(--white); cursor:pointer; font-family:var(--font); transition:all 0.15s;
+  }
+  .cat-refine:hover { border-color:var(--blue); color:var(--blue); }
+  .cat-refine svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2.5; }
+  .cat-add {
+    width:26px; height:26px; border-radius:50%; border:1.5px solid var(--blue);
+    background:var(--white); color:var(--blue); display:flex; align-items:center;
+    justify-content:center; cursor:pointer; font-size:16px; line-height:1;
+    flex-shrink:0; transition:all 0.15s;
+  }
+  .cat-add:hover { background:var(--blue); color:white; }
+
+  /* Paste box */
+  .kw-paste-box { width:100%; border:none; resize:none; height:110px; padding:10px; font-size:11.5px; font-family:var(--font); color:var(--text); outline:none; }
+  .kw-paste-footer { padding:6px 10px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; }
+  .btn-kw-add { padding:5px 14px; border-radius:var(--r-sm); background:var(--blue); color:white; border:none; font-size:11px; font-weight:600; cursor:pointer; font-family:var(--font); transition:all 0.15s; }
+  .btn-kw-add:hover { background:#3451d1; }
+  .left-scroll { overflow-y:auto; max-height:240px; }
+
+  /* RIGHT PANEL */
+  .kw-right-panel { border:1px solid var(--border); border-radius:var(--r); display:flex; flex-direction:column; }
+
+  /* Right header — default */
+  .kw-right-hdr { padding:8px 12px; border-bottom:1px solid var(--border); background:var(--bg); border-radius:var(--r) var(--r) 0 0; }
+  .kw-right-hdr-row1 { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+
+  /* Filter tabs */
+  .kw-filter-tabs { display:flex; gap:0; }
+  .kw-filter-tab { padding:3px 10px 4px; font-size:11px; font-weight:600; border:none; background:none; cursor:pointer; color:var(--text-3); font-family:var(--font); border-bottom:2px solid transparent; transition:all 0.15s; }
+  .kw-filter-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+
+  /* Selection action row */
+  .kw-action-row { display:flex; align-items:center; gap:8px; }
+  .kw-sel-check { width:14px; height:14px; accent-color:var(--blue); cursor:pointer; flex-shrink:0; }
+  .btn-unselect { font-size:11px; font-weight:600; color:var(--text-2); border:none; background:none; cursor:pointer; font-family:var(--font); }
+  .btn-remove-sel { font-size:11px; font-weight:700; color:var(--red); border:none; background:none; cursor:pointer; font-family:var(--font); display:none; }
+  .btn-remove-sel.show { display:inline; }
+  .btn-apply-bids {
+    margin-left:auto; display:flex; align-items:center; gap:4px;
+    font-size:11px; font-weight:600; color:var(--text-3);
+    border:1px solid var(--border); background:var(--white);
+    border-radius:var(--r-sm); padding:4px 10px; cursor:not-allowed;
+    font-family:var(--font); transition:all 0.15s; position:relative;
+    opacity: 0.5; pointer-events: none;
+  }
+  .btn-apply-bids.enabled {
+    color:var(--text-2); cursor:pointer; opacity:1; pointer-events:auto;
+  }
+  .btn-apply-bids.enabled:hover { border-color:var(--blue); color:var(--blue); }
+  .btn-apply-bids svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2.5; }
+
+  /* Apply bids dropdown */
+  .apply-bids-dropdown {
+    display:none; position:absolute; top:calc(100% + 4px); right:0;
+    background:var(--white); border:1px solid var(--border);
+    border-radius:var(--r); padding:12px 14px; width:220px;
+    box-shadow:var(--sh-md); z-index:50;
+  }
+  .apply-bids-dropdown.open { display:block; }
+  .apply-bids-dropdown h5 { font-size:11px; font-weight:700; color:var(--text); margin-bottom:10px; }
+  .apply-bid-opt { display:flex; align-items:center; gap:8px; margin-bottom:8px; cursor:pointer; }
+  .apply-bid-opt input[type=radio] { accent-color:var(--blue); width:13px; height:13px; }
+  .apply-bid-opt label { font-size:11.5px; color:var(--text); cursor:pointer; }
+  .btn-apply-confirm { width:100%; margin-top:8px; padding:7px; border-radius:var(--r-sm); background:var(--blue); color:white; border:none; font-size:12px; font-weight:700; cursor:pointer; font-family:var(--font); }
+  .btn-apply-confirm:hover { background:#3451d1; }
+
+  /* Right panel body scroll */
+  .kw-right-body { overflow-y:auto; max-height:280px; flex:1; }
+  .kw-right-empty { padding:28px 16px; text-align:center; font-size:11px; color:var(--text-3); line-height:1.6; }
+
+  /* Added keyword row */
+  .added-row { display:flex; align-items:flex-start; gap:8px; padding:8px 12px; border-bottom:1px solid var(--border); }
+  .added-row:last-child { border-bottom:none; }
+  .added-row input[type=checkbox] { accent-color:var(--blue); width:13px; height:13px; margin-top:3px; flex-shrink:0; cursor:pointer; }
+  .added-row-badges { display:flex; gap:3px; margin-bottom:3px; }
+  .badge-kw  { font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; background:#E8F5E9; color:#1B5E20; text-transform:uppercase; letter-spacing:0.3px; }
+  .badge-cat { font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; background:#F3E5F5; color:#6A1B9A; text-transform:uppercase; letter-spacing:0.3px; }
+  .badge-match { font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; background:#37474F; color:white; text-transform:uppercase; letter-spacing:0.3px; }
+  .added-row-info { flex:1; min-width:0; }
+  .added-row-name { font-size:12px; font-weight:600; color:var(--text); }
+  .added-row-sub  { font-size:10px; color:var(--text-3); margin-top:1px; }
+  .added-row-bid-col { display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0; }
+  .added-row-bid-wrap { display:flex; align-items:center; gap:4px; }
+  .added-row-currency { font-size:11px; color:var(--text-2); font-weight:500; }
+  .added-row-bid-inp { width:60px; border:1px solid var(--border); border-radius:var(--r-sm); padding:3px 6px; font-size:12px; font-weight:700; font-family:var(--font); color:var(--text); outline:none; text-align:right; transition:border-color 0.15s; }
+  .added-row-bid-inp:focus { border-color:var(--blue); }
+  .added-row-suggested { font-size:10px; color:var(--blue); white-space:nowrap; }
+  .kw-del-btn { width:22px; height:22px; border-radius:50%; background:var(--red-light); color:var(--red); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; line-height:1; flex-shrink:0; transition:all 0.15s; margin-top:2px; }
+  .kw-del-btn:hover { background:var(--red); color:white; }
+
+
+  /* ── NEGATIVE TARGETING ── */
+  .neg-match-pills { display:flex; gap:8px; margin-bottom:16px; }
+  .neg-match-pill {
+    display:flex; align-items:center; gap:6px;
+    padding:5px 14px; border-radius:99px; cursor:pointer;
+    border:1.5px solid var(--border); background:var(--white);
+    font-size:12px; font-weight:600; color:var(--text-3);
+    font-family:var(--font); transition:all 0.15s;
+  }
+  .neg-match-pill.active { border-color:var(--blue); background:var(--blue); color:white; }
+  .neg-match-pill .pill-dot {
+    width:8px; height:8px; border-radius:50%;
+    border:2px solid currentColor; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .neg-match-pill.active .pill-dot { background:white; border-color:white; }
+
+  .neg-layout { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  /* Left — textarea */
+  .neg-left { display:flex; flex-direction:column; }
+  .neg-textarea {
+    flex:1; border:1px solid var(--border); border-radius:var(--r);
+    padding:10px 12px; font-size:12px; font-family:var(--font);
+    color:var(--text); resize:none; min-height:160px; outline:none;
+    transition:border-color 0.15s; line-height:1.6;
+  }
+  .neg-textarea:focus { border-color:var(--blue); }
+  .neg-textarea::placeholder { color:var(--text-3); }
+
+  /* Right — added list */
+  .neg-right { display:flex; flex-direction:column; gap:0; }
+  .neg-right-header {
+    font-size:12px; font-weight:600; color:var(--text-2);
+    margin-bottom:8px;
+  }
+  .neg-right-header span { color:var(--blue); }
+  .neg-kw-list {
+    border:1px solid var(--border); border-radius:var(--r);
+    overflow-y:auto; max-height:200px; flex:1;
+  }
+  .neg-kw-item {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 12px; border-bottom:1px solid var(--border);
+    gap:8px;
+  }
+  .neg-kw-item:last-child { border-bottom:none; }
+  .neg-kw-info { flex:1; min-width:0; }
+  .neg-kw-name { font-size:12px; font-weight:500; color:var(--text); }
+  .neg-kw-type { font-size:10px; color:var(--text-3); margin-top:1px; }
+  .neg-kw-del {
+    width:22px; height:22px; border-radius:50%;
+    background:var(--red-light); color:var(--red);
+    border:none; cursor:pointer; display:flex; align-items:center;
+    justify-content:center; font-size:14px; line-height:1;
+    flex-shrink:0; transition:all 0.15s;
+  }
+  .neg-kw-del:hover { background:var(--red); color:white; }
+  .neg-empty {
+    padding:24px 16px; text-align:center;
+    font-size:11px; color:var(--text-3); line-height:1.6;
+  }
+
+
+  /* ── SECTION 7: TOP OF SEARCH ── */
+  .tos-desc { font-size:12px; color:var(--text-2); line-height:1.55; margin-bottom:14px; }
+  .tos-field-wrap { display:flex; flex-direction:column; gap:4px; max-width:260px; }
+  .tos-field-label { font-size:11px; font-weight:600; color:var(--text-2); }
+  .tos-input-row { display:flex; align-items:center; }
+  .tos-inp {
+    border:1px solid var(--border); border-radius:var(--r-sm) 0 0 var(--r-sm);
+    padding:7px 11px; font-size:13px; font-family:var(--font);
+    color:var(--text); outline:none; width:100px; font-weight:600;
+    transition:border-color 0.15s;
+  }
+  .tos-inp:focus { border-color:var(--blue); }
+  .tos-pct-suffix {
+    padding:7px 11px; background:var(--bg); border:1px solid var(--border);
+    border-left:none; border-radius:0 var(--r-sm) var(--r-sm) 0;
+    font-size:13px; color:var(--text-2); font-weight:600;
+  }
+  .tos-hint { font-size:10.5px; color:var(--text-3); margin-top:3px; }
+  .tos-hint strong { color:var(--text-2); }
+
+  /* ── SECTION 8: GENERAL SETTINGS ── */
+  .gs-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .gs-field { display:flex; flex-direction:column; gap:4px; }
+  .gs-label {
+    font-size:11px; font-weight:600; color:var(--text-2); letter-spacing:0.2px;
+    display:flex; align-items:center; gap:5px;
+  }
+  .gs-input {
+    border:1px solid var(--border); border-radius:var(--r-sm);
+    padding:8px 11px; font-size:13px; font-family:var(--font);
+    color:var(--text); outline:none; transition:border-color 0.15s;
+    background:var(--white);
+  }
+  .gs-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(67,97,238,0.07); }
+  .gs-input::placeholder { color:var(--text-3); }
+  .gs-input:disabled { background:var(--bg); color:var(--text-3); cursor:not-allowed; }
+
+  /* Date row */
+  .gs-date-row { display:flex; align-items:center; gap:10px; }
+  .gs-date-row .gs-field { flex:1; }
+  .gs-date-wrap { position:relative; }
+  .gs-date-wrap .gs-input { padding-right:32px; width:100%; }
+  .gs-date-icon {
+    position:absolute; right:10px; top:50%; transform:translateY(-50%);
+    color:var(--text-3); pointer-events:none;
+  }
+  .gs-date-icon svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+
+  /* No end date checkbox */
+  .gs-no-end { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-2); font-weight:500; cursor:pointer; }
+  .gs-no-end input[type=checkbox] { accent-color:var(--blue); width:14px; height:14px; cursor:pointer; }
+
+  /* Marketplace readonly */
+  .gs-marketplace-val {
+    border:1px solid var(--border); border-radius:var(--r-sm);
+    padding:8px 11px; font-size:13px; font-family:var(--font);
+    color:var(--text-2); background:var(--bg); font-weight:500;
+  }
+
+  /* Budget radio cards */
+  .gs-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+  .gs-budget-options { display:flex; flex-direction:column; gap:10px; }
+  .gs-budget-card {
+    border:1.5px solid var(--border); border-radius:var(--r);
+    padding:13px 16px; cursor:pointer; transition:all 0.15s; background:var(--white);
+  }
+  .gs-budget-card.selected { border-color:var(--blue); background:var(--white); }
+  .gs-budget-card-top { display:flex; align-items:flex-start; gap:10px; }
+  .gs-bud-radio {
+    width:16px; height:16px; border-radius:50%; border:2px solid var(--border-mid);
+    background:var(--white); display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; margin-top:2px; transition:all 0.15s;
+  }
+  .gs-budget-card.selected .gs-bud-radio { border-color:var(--blue); background:var(--blue); }
+  .gs-bud-radio-dot { width:6px; height:6px; border-radius:50%; background:white; display:none; }
+  .gs-budget-card.selected .gs-bud-radio-dot { display:block; }
+  .gs-bud-body h4 { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .gs-bud-body p  { font-size:11.5px; color:var(--text-2); line-height:1.5; }
+
+  /* Daily budget input shown when Campaign Budget selected */
+  .gs-daily-budget-expand { display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-mid); }
+  .gs-budget-card.selected .gs-daily-budget-expand { display:block; }
+  .gs-daily-row { display:flex; align-items:center; gap:0; max-width:200px; }
+  .gs-daily-prefix {
+    padding:7px 10px; background:var(--bg); border:1px solid var(--border);
+    border-right:none; border-radius:var(--r-sm) 0 0 var(--r-sm);
+    font-size:12px; color:var(--text-2); font-weight:500;
+  }
+  .gs-daily-inp {
+    border:1px solid var(--border); border-radius:0 var(--r-sm) var(--r-sm) 0;
+    padding:7px 10px; font-size:13px; font-family:var(--font);
+    color:var(--text); outline:none; width:110px; transition:border-color 0.15s;
+  }
+  .gs-daily-inp:focus { border-color:var(--blue); }
+  .gs-daily-hint { font-size:10.5px; color:var(--text-3); margin-top:4px; }
+
+
+  /* ── S2 ENHANCEMENT: TABS ── */
+  /* Segmented control — two distinct cards side by side with icon + title + description */
+  .tab-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+  .tab-btn {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 3px; padding: 12px 14px; cursor: pointer;
+    border: 1.5px solid var(--border); border-radius: var(--r);
+    background: var(--white); font-family: var(--font);
+    transition: all 0.18s; text-align: left;
+  }
+  .tab-btn:hover { border-color: var(--blue); background: var(--white); }
+  .tab-btn.active:hover { background: var(--blue-light); }
+  .tab-btn.active {
+    border-color: var(--blue); background: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(67,97,238,0.08);
+  }
+  .tab-btn-top { display: flex; align-items: center; gap: 7px; }
+  .tab-btn-top svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .tab-btn-title { font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .tab-btn.active .tab-btn-title { color: var(--blue); }
+  .tab-btn-desc { font-size: 11px; color: var(--text-3); line-height: 1.4; padding-left: 22px; }
+  .tab-btn.active .tab-btn-desc { color: #6d84f0; }
+
+  /* ── S2 ENHANCEMENT: SELLER LOCK ── */
+  .prod-locked {
+    display: none; flex-direction: column; align-items: center;
+    justify-content: center; padding: 32px 20px;
+    border: 1.5px dashed var(--border-mid); border-radius: var(--r);
+    background: var(--bg); text-align: center; gap: 10px;
+    grid-column: 1 / -1;
+  }
+  .prod-locked.show { display: flex; }
+  .prod-locked svg { width: 28px; height: 28px; stroke: var(--text-3); fill: none; stroke-width: 1.5; }
+  .prod-locked-title { font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .prod-locked-desc { font-size: 12px; color: var(--text-3); line-height: 1.6; }
+  .prod-locked-link {
+    color: var(--blue); font-weight: 600; text-decoration: none; cursor: pointer;
+    background: var(--blue-light); border: 1px solid var(--blue-mid);
+    padding: 5px 14px; border-radius: 99px; font-size: 12px; font-family: var(--font);
+    transition: all 0.15s;
+  }
+  .prod-locked-link:hover { background: var(--blue); color: white; }
+
+  /* ── S2 ENHANCEMENT: FLOW ARROW ── */
+  .prod-flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue); opacity: 0.5;
+  }
+  .prod-flow-arrow svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* Override product-layout to include arrow column */
+  .product-layout {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr;
+    gap: 0 10px;
+    align-items: start;
+  }
+
+  /* ── S2 ENHANCEMENT: EMPTY STATE ── */
+  .prod-empty {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 36px 20px;
+    border: 2px dashed var(--border); border-radius: var(--r);
+    background: var(--bg); text-align: center; gap: 8px;
+    min-height: 200px;
+  }
+  .prod-empty svg { width: 36px; height: 36px; stroke: var(--border-mid); fill: none; stroke-width: 1.3; }
+  .prod-empty-title { font-size: 13px; font-weight: 600; color: var(--text-2); }
+  .prod-empty p { font-size: 11.5px; color: var(--text-3); line-height: 1.6; margin: 0; max-width: 200px; }
+  .prod-empty-cta {
+    font-size: 11px; color: var(--blue); font-weight: 600;
+    background: var(--blue-light); padding: 4px 14px;
+    border-radius: 99px; border: 1px solid var(--blue-mid);
+    margin-top: 4px;
+  }
+
+  /* ── S2 ENHANCEMENT: ADD BUTTON WITH TEXT ── */
+  .prod-action.add {
+    display: flex; align-items: center; gap: 0;
+    background: var(--blue-light); color: var(--blue);
+    border: 1.5px solid var(--blue-mid); border-radius: 99px;
+    padding: 5px 14px;
+    font-size: 12px; font-weight: 700; font-family: var(--font);
+    cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+    letter-spacing: 0.2px;
+  }
+  .prod-action.add:hover { background: var(--blue); color: white; border-color: var(--blue); }
+
+  /* Right panel header — plain bold text */
+  .right-panel-hdr {
+    font-size: 13px; font-weight: 700; color: var(--text);
+    padding: 8px 0 10px; display: flex; align-items: center; gap: 6px;
+  }
+  .right-panel-hdr .count-pill {
+    background: var(--blue); color: white;
+    font-size: 11px; font-weight: 700; padding: 1px 8px;
+    border-radius: 99px;
+  }
+
+  /* fade in */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .page-header { animation: fadeUp 0.25s ease both; }
+  .card { animation: fadeUp 0.25s 0.05s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ═══════ TOPBAR ═══════ -->
+<header class="topbar">
+  <!-- Hamburger -->
+  <div class="tb-hamburger">
+    <span></span><span></span><span></span>
+  </div>
+
+  <!-- noonpartners logo — "noon" yellow bold, "partners" dark regular, all inline -->
+  <div style="display:flex;align-items:baseline;gap:0;margin-left:2px;line-height:1;">
+    <span style="font-size:16px;font-weight:800;color:#F5D200;letter-spacing:-0.5px;font-family:var(--font);">noon</span><span style="font-size:16px;font-weight:400;color:var(--text);letter-spacing:-0.5px;font-family:var(--font);">partners</span>
+  </div>
+
+  <!-- Store selector -->
+  <div class="tb-store" style="cursor:pointer;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r-sm);transition:border-color 0.15s;margin-left:2px;" onmouseenter="this.style.borderColor='#c0c7d8'" onmouseleave="this.style.borderColor='var(--border)'">
+    <span class="tb-store-id">14556</span>
+    <span class="tb-sep">|</span>
+    <span class="tb-store-name">Sara's Store LLC</span>
+    <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--text-3);fill:none;stroke-width:2.5;margin-left:3px;"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+  <!-- Search -->
+  <div class="tb-search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Type here">
+  </div>
+
+  <!-- Right icons — settings, bell, grid/apps, avatar -->
+  <div class="tb-right">
+    <!-- Settings gear -->
+    <button class="tb-icon" title="Settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <!-- Bell -->
+    <button class="tb-icon" title="Notifications">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <!-- Apps / grid icon -->
+    <button class="tb-icon" title="Apps">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </button>
+    <!-- Avatar -->
+    <div class="tb-avatar">SI</div>
+  </div>
+</header>
+
+<!-- ═══════ MAIN PAGE ═══════ -->
+<main class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="ph-left">
+      <h1 class="ph-title">Create Campaign</h1>
+      <span class="ph-badge">Product Ad</span>
+    </div>
+    <div class="ph-right">
+      <span class="ph-step-text">Steps 3 of 5</span>
+      <div class="ph-progress">
+        <div class="ph-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SECTION 1: SELLER SELECTION ═══════ -->
+  <div class="card" id="section-seller">
+    <div class="card-title">
+      1. Seller Selection<span class="req">*</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box">
+          <strong>Seller Selection</strong><br>
+          Select the sellers whose products you want to advertise in this campaign. You can choose from existing sellers or add new seller codes manually.
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Select the partners whose products you want to advertise in this campaign.</p>
+
+    <!-- Input row -->
+    <div class="seller-input-row">
+      <div class="field-group">
+        <label class="field-label">Enter Partner IDs</label>
+        <input
+          class="field-input"
+          id="seller-input"
+          type="text"
+          placeholder="Enter Partner ID (numbers only)"
+          oninput="validateSellerId(this)"
+          onkeydown="if(event.key==='Enter') addSeller()"
+        >
+        <div class="field-error" id="seller-error" style="display:none;">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="seller-error-msg">Please enter a valid partner ID</span>
+        </div>
+      </div>
+      <button class="btn-add-seller" onclick="addSeller()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Seller
+      </button>
+    </div>
+
+    <!-- Seller tags -->
+    <div class="seller-tags" id="seller-tags"></div>
+  </div>
+
+  <!-- ═══════ SECTION 2: PRODUCT SELECTION ═══════ -->
+  <div class="card" id="section-products">
+    <div class="card-title">
+      2. Product Selection<span class="req">*</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box">
+          <strong>Choose what to Promote?</strong><br>
+          Select products manually from your catalog or upload a bulk SKU file to include in your campaign.
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Choose the products you want to feature in this campaign.</p>
+
+    <!-- ── TABS — card style with title + description ── -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-manual" onclick="switchTab('manual')">
+        <div class="tab-btn-top">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span class="tab-btn-title">Manual Selection</span>
+        </div>
+        <span class="tab-btn-desc">Browse and pick products one by one from your catalog</span>
+      </button>
+      <button class="tab-btn" id="tab-bulk" onclick="switchTab('bulk')">
+        <div class="tab-btn-top">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span class="tab-btn-title">Bulk Upload</span>
+        </div>
+        <span class="tab-btn-desc">Upload a CSV file or paste SKUs to add products in bulk</span>
+      </button>
+    </div>
+
+    <!-- ── SELLER LOCK STATE ── -->
+    <div class="prod-locked" id="prod-locked">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <div class="prod-locked-title">Select a partner first</div>
+      <div class="prod-locked-desc">You need to add at least one Partner ID in Section 1<br>before you can browse and select products.</div>
+      <span class="prod-locked-link" onclick="document.getElementById('seller-input').focus();document.getElementById('section-seller').scrollIntoView({behavior:'smooth'})">
+        ↑ Go to Partner ID Selection
+      </span>
+    </div>
+
+    <!-- ── MANUAL SELECTION ── -->
+    <div id="pane-manual">
+      <div class="product-layout">
+
+        <!-- LEFT: catalog -->
+        <div class="prod-panel">
+          <div class="prod-panel-header" style="font-size:11px;color:var(--text-3);font-weight:500;">
+            Available Products
+          </div>
+          <div class="prod-search-row">
+            <div class="prod-search">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="prod-search-input" placeholder="Search by SKU name" oninput="filterProducts()">
+            </div>
+            <button class="btn-filter" onclick="toggleFilter()">
+              <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Filter
+            </button>
+          </div>
+          <div class="prod-list" id="prod-list-left"></div>
+        </div>
+
+        <!-- FLOW ARROW -->
+        <div class="prod-flow-arrow" style="padding-top:120px;">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+        </div>
+
+        <!-- RIGHT: selected -->
+        <div class="prod-panel" style="border:none;background:none;box-shadow:none;">
+          <div class="right-panel-hdr">
+            Products Selected
+            <span class="count-pill" id="selected-count">0</span>
+          </div>
+          <div id="prod-list-right" style="overflow-y:auto;max-height:340px;">
+            <div class="prod-empty" id="prod-empty-state">
+              <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <div class="prod-empty-title">No products added yet</div>
+              <p>Use the catalog on the left to browse and add products to your campaign.</p>
+              <span class="prod-empty-cta">← Click "+ Add" on any product</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── BULK UPLOAD ── -->
+    <div id="pane-bulk" style="display:none;">
+      <div class="product-layout">
+
+        <!-- LEFT: upload -->
+        <div class="prod-panel">
+          <div class="bulk-template-row">
+            <div class="bulk-template-icon">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="bulk-template-info">
+              <div class="bulk-template-name">Sample Bulk SKU Template</div>
+              <div class="bulk-template-size">1.5 KB</div>
+            </div>
+            <button class="btn-download" onclick="downloadTemplate()">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+          </div>
+          <div class="drop-zone" id="drop-zone"
+            onclick="document.getElementById('file-input').click()"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)">
+            <div class="drop-zone-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <p>Drag and Drop or <a onclick="event.stopPropagation();document.getElementById('file-input').click()">Select Files</a></p>
+            <small>(.CSV, .XLS, or .XLSX files)</small>
+            <input type="file" id="file-input" accept=".csv,.xls,.xlsx" onchange="handleFileSelect(event)">
+          </div>
+          <div class="uploaded-file" id="uploaded-file">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="uploaded-file-name" id="uploaded-file-name">file.csv</span>
+            <button class="btn-remove-file" onclick="removeFile()">Remove</button>
+          </div>
+          <div class="or-divider">Or</div>
+          <div class="paste-label">Copy &amp; Paste SKU's</div>
+          <textarea class="paste-area" id="sku-paste" placeholder="Enter SKUs separated by commas, spaces, or new lines (e.g., ZG1JSICL, SLSISO, SOAXL)"></textarea>
+          <div style="display:flex;justify-content:flex-end;">
+            <button class="btn-add-products" onclick="processSKUs()">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Products
+            </button>
+          </div>
+        </div>
+
+        <!-- FLOW ARROW -->
+        <div class="prod-flow-arrow" style="padding-top:80px;">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+        </div>
+
+        <!-- RIGHT: selected -->
+        <div class="prod-panel" style="border:none;background:none;box-shadow:none;">
+          <div class="right-panel-hdr">
+            Products Selected
+            <span class="count-pill" id="selected-count-bulk">0</span>
+          </div>
+          <div id="prod-list-right-bulk" style="overflow-y:auto;max-height:340px;">
+            <div class="prod-empty" id="prod-empty-bulk">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="prod-empty-title">No products added yet</div>
+              <p>Upload a CSV file or paste SKUs on the left to add products.</p>
+              <span class="prod-empty-cta">← Upload or paste SKUs</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SECTION 3   </div>
+  </div>
+
+  <!-- ═══════ SECTION 3: PRICING MODEL ═══════ -->
+  <div class="card" id="section-pricing">
+    <div class="card-title">
+      3. Pricing Model
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box">
+          <strong>Pricing Model</strong><br>
+          Choose how you want to be charged for your ads. CPC charges you per click received.
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Select the pricing model for this campaign.</p>
+
+    <div class="pricing-options">
+      <!-- CPC — selected by default -->
+      <div class="pricing-card selected" id="price-cpc" onclick="selectPricing('cpc')">
+        <div class="pricing-card-top">
+          <span class="pricing-card-label">Cost Per Click (CPC)</span>
+          <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        </div>
+        <div class="pricing-card-desc">You are charged each time a shopper clicks on your ad. Ideal for driving traffic directly to your products.</div>
+      </div>
+      <!-- CPS — greyed out / coming soon -->
+      <div class="pricing-card disabled" id="price-cps">
+        <div class="pricing-card-top">
+          <span class="pricing-card-label">Cost Per Sale (CPS) <span class="pricing-soon-badge">Coming Soon</span></span>
+          <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
+        </div>
+        <div class="pricing-card-desc">You are charged only when a sale is made directly attributed to your ad. Pay for results, not clicks.</div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- ═══════ SECTION 4: BIDDING STRATEGY ═══════ -->
+  <div class="card" id="section-bidding">
+    <div class="card-title">
+      4. Bidding Strategy<span class="req">*</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box" style="width:260px;">
+          <strong>How do bidding strategies work?</strong><br><br>
+          Choose how the system adjusts your bids in real time to help you win auctions efficiently.
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Select your bidding strategy to manage how much you spend per click.</p>
+
+    <div class="bidding-options">
+
+      <!-- Dynamic Up & Down — default selected -->
+      <div class="bid-card selected" id="bid-updown" onclick="selectBid('updown')">
+        <div class="bid-radio"><div class="bid-radio-dot"></div></div>
+        <div class="bid-body">
+          <div class="bid-title-row">
+            <div class="bid-title-left">
+              <span class="bid-title">Dynamic Bid (Up &amp; Down)</span>
+              <span class="bid-strategy-hint">
+                <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Best for growth
+              </span>
+            </div>
+            <span class="bid-recommended-badge">Recommended</span>
+          </div>
+          <div class="bid-desc">We bid up to 2x for top placements and scale back during low competition to ensure your budget goes where it counts.</div>
+          <div class="bid-example">Example: With a AED 1.00 bid, we may raise it to AED 2.00 for high-value placements or lower it to the minimum.</div>
+        </div>
+      </div>
+
+      <!-- Dynamic Down Only -->
+      <div class="bid-card" id="bid-down" onclick="selectBid('down')">
+        <div class="bid-radio"><div class="bid-radio-dot"></div></div>
+        <div class="bid-body">
+          <div class="bid-title-row">
+            <div class="bid-title-left">
+              <span class="bid-title">Dynamic Bid (Down Only)</span>
+              <span class="bid-strategy-hint">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Best for budget control
+              </span>
+            </div>
+          </div>
+          <div class="bid-desc">We lower your bids when competition is low to help you spend your budget more efficiently.</div>
+          <div class="bid-example">Example: With a AED 1.00 bid, we may lower it for low-probability clicks, but we will never exceed AED 1.00.</div>
+        </div>
+      </div>
+
+      <!-- Fixed -->
+      <div class="bid-card" id="bid-fixed" onclick="selectBid('fixed')">
+        <div class="bid-radio"><div class="bid-radio-dot"></div></div>
+        <div class="bid-body">
+          <div class="bid-title">Fixed</div>
+          <div class="bid-desc">Set your default bid amount. You'll bid that specific value for every click without any real-time adjustments.</div>
+          <div class="bid-example">Example: With a AED 1.00 bid, you will bid exactly AED 1.00 for every auction, regardless of conversion likelihood.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+    </div>
+
+    <!-- ── MANUAL PANE ── -->
+    <div id="tgt-pane-manual" style="display:none;">
+      <div class="manual-layout">
+
+        <!-- LEFT PANEL -->
+        <div class="prod-panel manual-left">
+
+          <!-- Keywords / Categories sub-tabs -->
+          <div class="manual-subtabs">
+            <button class="manual-subtab active" id="msub-kw" onclick="switchManualSub('kw')">Keywords</button>
+            <button class="manual-subtab" id="msub-cat" onclick="switchManualSub('cat')">Categories</button>
+          </div>
+
+          <!-- AI Recommended / Manual Upload source tabs -->
+          <div class="manual-source-tabs">
+            <button class="manual-source-tab active" id="msrc-ai" onclick="switchManualSrc('ai')">AI Recommended</button>
+            <button class="manual-source-tab" id="msrc-upload" onclick="switchManualSrc('upload')">Manual Upload</button>
+          </div>
+
+          <!-- AI RECOMMENDED keyword list -->
+          <div id="msrc-pane-ai">
+            <div class="kw-search-row">
+              <div class="kw-search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search for keywords..." id="kw-search-input" oninput="filterKeywords()">
+              </div>
+            </div>
+            <div style="overflow-y:auto;max-height:240px;" id="kw-list">
+              <!-- populated by JS -->
+            </div>
+          </div>
+
+          <!-- MANUAL UPLOAD paste area -->
+          <div id="msrc-pane-upload" style="display:none;">
+            <textarea class="kw-paste-area" id="kw-paste" placeholder="Enter list of keywords ie. iphoneX, iphone case"></textarea>
+            <div class="kw-paste-footer">
+              <button class="btn-add-kw" onclick="addKeywordsFromPaste()">Add Keywords</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="manual-right">
+          <div class="manual-right-header">
+            <!-- All Targets / Keywords / Categories filter -->
+            <div class="manual-right-tabs">
+              <button class="manual-right-tab active" id="rt-all" onclick="switchRightTab('all')">All Targets</button>
+              <button class="manual-right-tab" id="rt-kw" onclick="switchRightTab('kw')">Keywords</button>
+              <button class="manual-right-tab" id="rt-cat" onclick="switchRightTab('cat')">Categories</button>
+            </div>
+            <span id="added-kw-count" style="font-size:11px;color:var(--text-3);">0 targets</span>
+          </div>
+          <div class="manual-right-body" id="added-kw-list">
+            <div class="kw-empty" id="kw-empty-state">
+              <p>No keywords/categories added yet.<br>Add keywords from left panel to start bidding.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- ═══════ SECTION 5: TARGETING ═══════ -->
+  <div class="card" id="section-targeting">
+    <div class="card-title">
+      5. Targeting<span class="req">*</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box" style="width:260px;">
+          <strong>Targeting Type</strong><br><br>
+          Auto: noon automatically matches your ads to relevant keywords and categories.<br><br>
+          Manual: You choose specific keywords or categories to target.
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Choose how you want to target your ads.</p>
+
+    <!-- CARD-STYLE TABS — matching Section 2 construct -->
+    <div class="tgt-tab-bar">
+      <button class="tgt-tab-btn active" id="seg-auto" onclick="selectTgt('auto')">
+        <div class="tgt-tab-top">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <span class="tgt-tab-title">Auto Targeting</span>
+        </div>
+        <span class="tgt-tab-desc">Noon automatically matches your ads with the most relevant placements</span>
+      </button>
+      <button class="tgt-tab-btn" id="seg-manual" onclick="selectTgt('manual')">
+        <div class="tgt-tab-top">
+          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span class="tgt-tab-title">Manual Targeting</span>
+        </div>
+        <span class="tgt-tab-desc">Select specific keywords or categories to reach your target audience</span>
+      </button>
+    </div>
+
+    <!-- AUTO PANEL -->
+    <div class="tgt-panel active" id="tgt-panel-auto">
+
+      <!-- Set Default Bid — 5.3 -->
+      <div class="tgt-bid-header">
+        <h5>Set Default Bid</h5>
+        <p>This can be adjusted later in real-time based on your chosen bidding strategy.</p>
+      </div>
+
+      <!-- 5.7 — Bid mode radio cards matching Section 4 -->
+      <div class="bid-mode-cards">
+
+        <!-- Single Bid card -->
+        <div class="bid-mode-card selected" id="bmc-amount">
+          <div class="bid-mode-radio"><div class="bid-mode-radio-dot"></div></div>
+          <div class="bid-mode-body">
+            <div class="bid-mode-title">Default Bid Amount</div>
+            <div class="bid-mode-desc">Set a single bid applied equally across all placement types.</div>
+            <div class="bid-mode-expand">
+              <div class="bid-field-wrap">
+                <span class="bid-field-label">Bid Amount</span>
+                <div class="bid-field-row">
+                  <span class="bid-pfx">&#x62F;</span>
+                  <input class="bid-inp" id="auto-bid-inp" type="number" placeholder="0.00" min="0.21" step="0.01" onclick="event.stopPropagation()">
+                </div>
+                <span class="bid-hint">Minimum &#x62F; 0.21</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bid by placement card -->
+        <div class="bid-mode-card" id="bmc-placement">
+          <div class="bid-mode-radio"><div class="bid-mode-radio-dot"></div></div>
+          <div class="bid-mode-body">
+            <div class="bid-title-row">
+              <div class="bid-title-left">
+                <span class="bid-mode-title">Default Bid by Placement</span>
+                <span class="bid-strategy-hint">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                  More control
+                </span>
+              </div>
+            </div>
+            <div class="bid-mode-desc">Set different bids for Keyword and Category placements individually.</div>
+            <div class="bid-mode-expand">
+
+              <!-- 5.8 — Two column checkbox layout, no boxes -->
+              <div class="plc-cols">
+
+                <!-- Keyword column -->
+                <div class="plc-col" id="plc-col-kw">
+                  <label class="plc-col-label">
+                    <input type="checkbox" id="chk-kw" checked>
+                    <span>Keyword</span>
+                    <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
+                  </label>
+                  <div class="plc-col-body" id="plc-col-body-kw">
+                    <div class="bid-field-row" style="margin-bottom:5px;">
+                      <span class="bid-pfx">&#x62F;</span>
+                      <input class="bid-inp" id="inp-kw" type="number" placeholder="0.00">
+                    </div>
+                    <div class="plc-range">
+                      Recommended Range <span class="plc-range-vals">&#x62F; 0.30 – &#x62F; 0.36</span>
+                    </div>
+                    <a class="plc-why" href="#" onclick="return false;">Why this range?</a>
+                  </div>
+                </div>
+
+                <!-- Category column -->
+                <div class="plc-col" id="plc-col-cat">
+                  <label class="plc-col-label">
+                    <input type="checkbox" id="chk-cat" checked>
+                    <span>Category</span>
+                    <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
+                  </label>
+                  <div class="plc-col-body" id="plc-col-body-cat">
+                    <div class="bid-field-row" style="margin-bottom:5px;">
+                      <span class="bid-pfx">&#x62F;</span>
+                      <input class="bid-inp" id="inp-cat" type="number" placeholder="0.00">
+                    </div>
+                    <div class="plc-range">
+                      Recommended Range <span class="plc-range-vals">&#x62F; 0.30 – &#x62F; 0.36</span>
+                    </div>
+                    <a class="plc-why" href="#" onclick="return false;">Why this range?</a>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MANUAL PANEL -->
+    <div class="tgt-panel" id="tgt-panel-manual">
+      <div class="manual-cols">
+
+        <!-- ── LEFT PANEL ── -->
+        <div class="left-panel-box">
+          <div class="pill-tabs">
+            <button class="pill-tab active" id="pt-kw"  onclick="switchPillTab('kw')">Keywords</button>
+            <button class="pill-tab"        id="pt-cat" onclick="switchPillTab('cat')">Categories</button>
+          </div>
+          <div id="pane-kw">
+            <div class="src-tabs">
+              <button class="src-tab active" id="st-ai"     onclick="switchSrcTab('ai')">AI Recommended</button>
+              <button class="src-tab"        id="st-manual" onclick="switchSrcTab('manual')">Manual Upload</button>
+            </div>
+            <div id="st-pane-ai">
+              <div class="kw-search-sort">
+                <div class="kw-srch">
+                  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" placeholder="Search by SKU name" id="kw-srch-inp" oninput="filterKwList()">
+                </div>
+                <button class="sort-btn">Sort by Popularity <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+              </div>
+              <div class="left-scroll" id="kw-left-list"></div>
+            </div>
+            <div id="st-pane-manual" style="display:none;">
+              <textarea class="kw-paste-box" id="kw-paste-inp" placeholder="Enter a comma separated keyword list. (eg. Headphones, Earbuds, Airpods)"></textarea>
+              <div class="kw-paste-footer">
+                <button class="btn-kw-add" onclick="addKwsFromPaste()">Add Keywords</button>
+              </div>
+            </div>
+          </div>
+          <div id="pane-cat" style="display:none;">
+            <div class="kw-search-sort" style="padding:8px 10px;">
+              <div class="kw-srch">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search by Category name..." id="cat-srch-inp" oninput="filterCatList()">
+              </div>
+            </div>
+            <div class="left-scroll" id="cat-left-list"></div>
+          </div>
+        </div>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="kw-right-panel">
+          <div class="kw-right-hdr">
+            <div class="kw-right-hdr-row1">
+              <div class="kw-filter-tabs">
+                <button class="kw-filter-tab active" id="krf-all" onclick="filterRight('all')">All Targets</button>
+                <button class="kw-filter-tab"        id="krf-kw"  onclick="filterRight('kw')">Keywords</button>
+                <button class="kw-filter-tab"        id="krf-cat" onclick="filterRight('cat')">Categories</button>
+              </div>
+            </div>
+            <div class="kw-action-row">
+              <input type="checkbox" class="kw-sel-check" id="chk-select-all" onchange="handleSelectAll(this.checked)">
+              <button class="btn-unselect" id="btn-unselect-lbl" onclick="handleSelectAll(false)">Select All</button>
+              <button class="btn-remove-sel" id="btn-remove-sel" onclick="removeSelected()">Remove Selected</button>
+              <div class="btn-apply-bids" id="btn-apply-bids" onclick="toggleApplyDropdown(event)">
+                Set Bid in Bulk
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                <div class="apply-bids-dropdown" id="apply-bids-dd">
+                  <h5>Set Bid in Bulk for Selected Targets</h5>
+                  <label class="apply-bid-opt"><input type="radio" name="bid-bulk" value="recommended" checked> <span>Set Recommended bid</span></label>
+                  <label class="apply-bid-opt"><input type="radio" name="bid-bulk" value="max"> <span>Set Max Recommended Bid</span></label>
+                  <label class="apply-bid-opt"><input type="radio" name="bid-bulk" value="custom"> <span>Set Custom bid</span></label>
+                  <button class="btn-apply-confirm" onclick="applyBulkBid()">Apply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="kw-right-body" id="kw-right-body">
+            <div class="kw-right-empty" id="kw-right-empty">No keywords/categories added yet.<br>Add keywords from left panel to start bidding.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════ SECTION 6: NEGATIVE TARGETING ═══════ -->
+  <div class="card" id="section-negative">
+    <div class="card-title">
+      6. Negative Targeting
+      <span style="font-size:12px;font-weight:400;color:var(--text-3);margin-left:2px;">(Optional)</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box" style="width:280px;">
+          <strong>Negative Keyword Targeting</strong><br><br>
+          Phrase Match: If you enter "red shirt", negative phrase match will not show your ad on any search query that has the phrase "red shirt".<br><br>
+          Exact Match: If you enter "red shirt", negative exact match will not show your ad only on the exact "red shirt" search query.
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Exclude specific keywords to prevent your ads from appearing in relevant searches. You can add up to 20 Exact and 20 Phrase negative targets.</p>
+
+    <!-- Exact / Phrase radio pills -->
+    <div class="neg-match-pills">
+      <button class="neg-match-pill active" id="neg-pill-exact"  onclick="selectNegMatch('exact')">
+        <span class="pill-dot"></span> Exact
+      </button>
+      <button class="neg-match-pill" id="neg-pill-phrase" onclick="selectNegMatch('phrase')">
+        <span class="pill-dot"></span> Phrase
+      </button>
+    </div>
+
+    <!-- Two column layout -->
+    <div class="neg-layout">
+      <!-- LEFT: textarea input -->
+      <div class="neg-left">
+        <textarea
+          class="neg-textarea"
+          id="neg-textarea"
+          placeholder="Enter a comma separated keyword list. (eg. Headphones, Earbuds, Airpods)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addNegKws();}"
+        ></textarea>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+          <button class="btn-kw-add" onclick="addNegKws()">Add Keywords</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: added keywords -->
+      <div class="neg-right">
+        <div class="neg-right-header" id="neg-count-header">
+          <span id="neg-count">0</span> Keywords selected
+        </div>
+        <div class="neg-kw-list" id="neg-kw-list">
+          <div class="neg-empty" id="neg-empty">No negative keywords added yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="placeholder-body"><span>Coming next →</span></div>
+  </div>
+
+  <!-- ═══════ SECTION 7: TOP OF SEARCH PLACEMENT BIDDING ═══════ -->
+  <div class="card" id="section-tos">
+    <div class="card-title">
+      7. Top of Search Placement Bidding
+      <span style="font-size:12px;font-weight:400;color:var(--text-3);margin-left:2px;">(Optional)</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box" style="width:300px;">
+          <strong>Bid for Top of Search Placement</strong><br><br>
+          Top of Search Bidding allows you to increase your bid specifically when your ad is eligible to appear in the top position of search results.<br><br>
+          You can set a bid adjustment between 10% and 900%. When your ad qualifies for the top slot, your base bid will be increased by the selected percentage.<br><br>
+          <em>Example: If your base bid is AED 1.00 and you set a top of slot adjustment of 50%, your bid will increase to AED 1.50 when aiming for the top slot.</em>
+        </div>
+      </div>
+    </div>
+    <p class="card-sub">Boost your base bid by up to 900% to compete for top of search placements.</p>
+
+    <div class="tos-field-wrap">
+      <label class="tos-field-label">Bid Percentage</label>
+      <div class="tos-input-row">
+        <input
+          class="tos-inp"
+          id="tos-input"
+          type="number"
+          placeholder="300"
+          min="10"
+          max="900"
+          value="300"
+          oninput="validateTos(this)"
+        >
+        <span class="tos-pct-suffix">%</span>
+      </div>
+      <div class="tos-hint" id="tos-hint">
+        eg. A &#x62F; 1.00 bid will be &#x62F; <strong id="tos-computed">4.00</strong> for the top of search.
+      </div>
+      <div class="field-error" id="tos-error" style="display:none;">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Value must be between 10% and 900%
+      </div>
+    </div>
+  </div>
+
+  <div class="placeholder-body"><span>Coming next →</span></div>
+  </div>
+
+  <!-- ═══════ SECTION 8: GENERAL SETTINGS ═══════ -->
+  <div class="card" id="section-general">
+    <div class="card-title">
+      8. General Settings<span class="req">*</span>
+      <div class="tooltip-wrap">
+        <span class="info-icon">i</span>
+        <div class="tooltip-box" style="width:260px;">
+          <strong>General Settings</strong><br><br>
+          Set your campaign name, schedule, marketplace and budget.
+        </div>
+      </div>
+    </div>
+
+    <!-- Campaign Name + Marketplace -->
+    <div class="gs-grid-2">
+      <div class="gs-field">
+        <label class="gs-label">Campaign Name <span class="req">*</span></label>
+        <input class="gs-input" type="text" placeholder="Ramadan 2026 Campaign" id="gs-camp-name">
+      </div>
+      <div class="gs-field">
+        <label class="gs-label">Marketplace</label>
+        <div class="gs-marketplace-val">NOON</div>
+      </div>
+    </div>
+
+    <!-- Start Date + End Date + No End Date checkbox -->
+    <div class="gs-grid-2" style="margin-bottom:8px;">
+      <div class="gs-field">
+        <label class="gs-label">Start Date <span class="req">*</span></label>
+        <div class="gs-date-wrap">
+          <input class="gs-input" type="text" id="gs-start-date" value="25 Mar 2025" readonly>
+          <span class="gs-date-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        </div>
+      </div>
+      <div class="gs-field">
+        <label class="gs-label" style="justify-content:space-between;">
+          <span>End Date</span>
+          <label class="gs-no-end" onclick="event.stopPropagation()">
+            <input type="checkbox" id="gs-no-end" checked onchange="toggleNoEndDate(this.checked)"> No End Date
+          </label>
+        </label>
+        <div class="gs-date-wrap">
+          <input class="gs-input" type="text" id="gs-end-date" value="" disabled>
+          <span class="gs-date-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="gs-divider">
+
+    <!-- Shared Budget | Campaign Budget radio cards -->
+    <div class="gs-budget-options">
+
+      <!-- Shared Budget -->
+      <div class="gs-budget-card" id="gs-bud-shared" onclick="selectBudget('shared')">
+        <div class="gs-budget-card-top">
+          <div class="gs-bud-radio"><div class="gs-bud-radio-dot"></div></div>
+          <div class="gs-bud-body">
+            <h4>Shared Budget</h4>
+            <p>Distribute budget across multiple campaigns.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaign Budget (default selected) -->
+      <div class="gs-budget-card selected" id="gs-bud-campaign" onclick="selectBudget('campaign')">
+        <div class="gs-budget-card-top">
+          <div class="gs-bud-radio"><div class="gs-bud-radio-dot"></div></div>
+          <div class="gs-bud-body">
+            <h4>Campaign Budget</h4>
+            <p>Set a dedicated budget for this campaign.</p>
+          </div>
+        </div>
+        <!-- Daily budget — only visible when Campaign Budget selected -->
+        <div class="gs-daily-budget-expand">
+          <div class="gs-field" style="max-width:180px;">
+            <label class="gs-label">
+              Maximum Daily Budget
+              <div class="tooltip-wrap">
+                <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
+                <div class="tooltip-box" style="width:260px;top:18px;">
+                  The daily budget is not a fixed limit. During high-traffic periods, Noon may display your ads to multiple users, potentially exceeding the set budget. The maximum charge you may incur will be 15% above your set budget.
+                </div>
+              </div>
+            </label>
+            <div class="gs-daily-row">
+              <span class="gs-daily-prefix">&#x62F;</span>
+              <input class="gs-daily-inp" type="number" id="gs-daily-budget" placeholder="1000" min="0.1" step="0.1" value="1000">
+            </div>
+            <div class="gs-daily-hint">Budget increase will be immediate (today)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="placeholder-body"><span>Coming next →</span></div>
+  </div>
+
+</main>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <button class="btn-cancel">Cancel &amp; Go Back</button>
+  <button class="btn-draft">Save As Draft</button>
+  <button class="btn-launch">Launch Campaign</button>
+</footer>
+
+<script>
+  // ══════════════════════════════
+  // SELLER LOGIC
+  // ══════════════════════════════
+  const sellers = [];
+  function validateSellerId(input) {
+    const val = input.value.trim();
+    const err = document.getElementById('seller-error');
+    if (val && !/^\d+$/.test(val)) {
+      document.getElementById('seller-error-msg').textContent = 'Please enter a valid partner ID (numbers only)';
+      err.style.display = 'flex';
+    } else { err.style.display = 'none'; }
+  }
+  function addSeller() {
+    const input = document.getElementById('seller-input');
+    const val = input.value.trim();
+    const err = document.getElementById('seller-error');
+    if (!val) { document.getElementById('seller-error-msg').textContent = 'Please enter a partner ID'; err.style.display = 'flex'; input.focus(); return; }
+    if (!/^\d+$/.test(val)) { document.getElementById('seller-error-msg').textContent = 'Please enter a valid partner ID (numbers only)'; err.style.display = 'flex'; input.focus(); return; }
+    if (sellers.includes(val)) { document.getElementById('seller-error-msg').textContent = 'Partner ID already exists'; err.style.display = 'flex'; input.focus(); return; }
+    err.style.display = 'none';
+    sellers.push(val);
+    input.value = '';
+    renderTags();
+    checkSellerLock();
+    input.focus();
+  }
+  function removeSeller(id) { const i = sellers.indexOf(id); if (i > -1) sellers.splice(i,1); renderTags(); checkSellerLock(); }
+  function renderTags() {
+    const c = document.getElementById('seller-tags');
+    c.innerHTML = sellers.map(id =>
+      '<div class="seller-tag"><span>' + id + '</span><button class="seller-tag-x" onclick="removeSeller(\'' + id + '\')">×</button></div>'
+    ).join('');
+  }
+
+  // ══════════════════════════════
+  // PRODUCT SELECTION
+  // ══════════════════════════════
+  const allProducts = [
+    {id:'P001',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
+    {id:'P002',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
+    {id:'P003',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
+    {id:'P004',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
+    {id:'P005',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
+    {id:'P006',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,900.00',badge:'express'},
+  ];
+  const selectedProducts = [];
+
+  function productThumb() {
+    return '<div class="prod-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
+  }
+  function checkSellerLock() {
+    const locked = document.getElementById('prod-locked');
+    const paneM  = document.getElementById('pane-manual');
+    const paneB  = document.getElementById('pane-bulk');
+    if (!locked) return;
+    const hasSellerr = sellers.length > 0;
+    locked.classList.toggle('show', !hasSellerr);
+    if (paneM) paneM.style.display  = hasSellerr ? (document.getElementById('tab-manual').classList.contains('active') ? 'block' : 'none') : 'none';
+    if (paneB) paneB.style.display  = hasSellerr ? (document.getElementById('tab-bulk').classList.contains('active')   ? 'block' : 'none') : 'none';
+    if (hasSellerr) renderLeftProducts();
+  }
+
+  function renderLeftProducts(filter) {
+    filter = filter || '';
+    const list = document.getElementById('prod-list-left');
+    if (!list) return;
+    const filtered = allProducts.filter(function(p) {
+      return !selectedProducts.find(function(s) { return s.id === p.id; }) &&
+             p.name.toLowerCase().includes(filter.toLowerCase());
+    });
+    if (!filtered.length) {
+      list.innerHTML = '<div class="prod-empty" style="min-height:120px;"><p>No products found matching your search.</p></div>';
+      return;
+    }
+    list.innerHTML = '';
+    filtered.forEach(function(p) {
+      const div = document.createElement('div');
+      div.className = 'prod-item';
+      div.id = 'left-' + p.id;
+      div.innerHTML =
+        productThumb() +
+        '<div class="prod-info">' +
+          '<div class="prod-name">' + p.name + '</div>' +
+          '<div class="prod-meta">' +
+            '<span class="prod-price">&#x62F; ' + p.price + '</span>' +
+            (p.badge ? '<span class="prod-badge">' + p.badge + '</span>' : '') +
+          '</div>' +
+        '</div>';
+      const btn = document.createElement('button');
+      btn.className = 'prod-action add';
+      btn.innerHTML = 'Add';
+      btn.addEventListener('click', function() { addProduct(p.id); });
+      div.appendChild(btn);
+      list.appendChild(div);
+    });
+  }
+  function renderRightProducts() {
+    const right = document.getElementById('prod-list-right');
+    const empty = document.getElementById('prod-empty-state');
+    const countEl = document.getElementById('selected-count');
+    if (countEl) countEl.textContent = selectedProducts.length;
+    if (!selectedProducts.length) { empty.style.display = 'flex'; Array.from(right.querySelectorAll('.prod-item')).forEach(e => e.remove()); return; }
+    empty.style.display = 'none';
+    Array.from(right.querySelectorAll('.prod-item')).forEach(e => e.remove());
+    selectedProducts.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'prod-item';
+      div.innerHTML = productThumb() +
+        '<div class="prod-info"><div class="prod-name">' + p.name + '</div>' +
+        '<div class="prod-meta"><span class="prod-price">&#x62F; ' + p.price + '</span>' +
+        (p.badge ? '<span class="prod-badge">' + p.badge + '</span>' : '') + '</div></div>' +
+        '<button class="prod-action remove" data-id="' + p.id + '"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
+      div.querySelector('.prod-action.remove').addEventListener('click', () => removeProduct(p.id));
+      right.appendChild(div);
+    });
+  }
+  function addProduct(id) {
+    const prod = allProducts.find(p => p.id === id);
+    if (!prod || selectedProducts.find(s => s.id === id)) return;
+    selectedProducts.push({...prod});
+    renderLeftProducts(document.getElementById('prod-search-input') ? document.getElementById('prod-search-input').value : '');
+    renderRightProducts(); syncBulkRight();
+  }
+  function removeProduct(id) {
+    const i = selectedProducts.findIndex(p => p.id === id);
+    if (i > -1) selectedProducts.splice(i, 1);
+    renderLeftProducts(document.getElementById('prod-search-input') ? document.getElementById('prod-search-input').value : '');
+    renderRightProducts(); syncBulkRight();
+  }
+  function filterProducts() { renderLeftProducts(document.getElementById('prod-search-input').value); }
+  function toggleFilter() {}
+  function switchTab(tab) {
+    document.getElementById('pane-manual').style.display = tab === 'manual' ? 'block' : 'none';
+    document.getElementById('pane-bulk').style.display   = tab === 'bulk'   ? 'block' : 'none';
+    document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
+    document.getElementById('tab-bulk').classList.toggle('active',   tab === 'bulk');
+    if (tab === 'bulk') syncBulkRight();
+  }
+  function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('dragover'); }
+  function handleDragLeave() { document.getElementById('drop-zone').classList.remove('dragover'); }
+  function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('dragover'); const f = e.dataTransfer.files[0]; if (f) showUploadedFile(f.name); }
+  function handleFileSelect(e) { const f = e.target.files[0]; if (f) showUploadedFile(f.name); }
+  function showUploadedFile(name) { document.getElementById('uploaded-file-name').textContent = name; document.getElementById('uploaded-file').classList.add('show'); }
+  function removeFile() { document.getElementById('uploaded-file').classList.remove('show'); document.getElementById('file-input').value = ''; }
+  function processSKUs() {
+    const raw = document.getElementById('sku-paste').value.trim();
+    if (!raw) { alert('Please enter some SKUs to process.'); return; }
+    raw.split(/[\s,\n]+/).filter(Boolean).forEach(sku => {
+      const prod = allProducts.find(p => p.id.toLowerCase() === sku.toLowerCase());
+      if (prod && !selectedProducts.find(s => s.id === prod.id)) selectedProducts.push({...prod});
+    });
+    document.getElementById('sku-paste').value = '';
+    syncBulkRight(); renderRightProducts();
+  }
+  function syncBulkRight() {
+    const right = document.getElementById('prod-list-right-bulk');
+    const empty = document.getElementById('prod-empty-bulk');
+    const countEl = document.getElementById('selected-count-bulk');
+    if (countEl) countEl.textContent = selectedProducts.length;
+    if (!selectedProducts.length) { if (empty) empty.style.display = 'flex'; Array.from(right ? right.querySelectorAll('.prod-item') : []).forEach(e => e.remove()); return; }
+    if (empty) empty.style.display = 'none';
+    if (!right) return;
+    Array.from(right.querySelectorAll('.prod-item')).forEach(e => e.remove());
+    selectedProducts.forEach(p => {
+      const div = document.createElement('div'); div.className = 'prod-item';
+      div.innerHTML = productThumb() + '<div class="prod-info"><div class="prod-name">' + p.name + '</div></div>' +
+        '<button class="prod-action remove" data-id="' + p.id + '"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/></svg></button>';
+      div.querySelector('.prod-action.remove').addEventListener('click', () => { const i = selectedProducts.findIndex(s => s.id === p.id); if (i > -1) selectedProducts.splice(i,1); syncBulkRight(); renderRightProducts(); });
+      right.appendChild(div);
+    });
+  }
+  function downloadTemplate() { const a = document.createElement('a'); a.href = 'data:text/csv,SKU\nZG1JSICL\nSLSISO\nSOAXL'; a.download = 'bulk_sku_template.csv'; a.click(); }
+
+  // ══════════════════════════════
+  // PRICING MODEL
+  // ══════════════════════════════
+  function selectPricing(type) {
+    document.getElementById('price-cpc').classList.toggle('selected', type === 'cpc');
+    document.getElementById('price-cps').classList.toggle('selected', type === 'cps');
+  }
+
+  // ══════════════════════════════
+  // BIDDING STRATEGY
+  // ══════════════════════════════
+  function selectBid(type) {
+    ['updown','down','fixed'].forEach(t => {
+      document.getElementById('bid-' + t).classList.toggle('selected', t === type);
+    });
+  }
+
+  // ══════════════════════════════
+  // TARGETING
+  // ══════════════════════════════
+  const kwSuggestions = [
+    {text:'Wireless headphones',         vol:'Approx. search volume: 500-1000'},
+    {text:'Bluetooth earphones',         vol:'Approx. search volume: 500-1000'},
+    {text:'Noise cancelling headphones', vol:'Approx. search volume: 200-500'},
+    {text:'Over ear headphones',         vol:'Approx. search volume: 100-200'},
+    {text:'Gaming headset',              vol:'Approx. search volume: 500-1000'},
+    {text:'True wireless earbuds',       vol:'Approx. search volume: 300-500'},
+  ];
+  const catList = [
+    'Electronics & Mobiles','Fashion','Home & Kitchen',
+    'Toys & Games','Baby Products','Sports & Outdoors','Beauty & Health',
+  ];
+  const addedTargets = [];
+  let rightFilter = 'all';
+
+  function selectTgt(type) {
+    const isAuto = type === 'auto';
+    document.getElementById('seg-auto').classList.toggle('active', isAuto);
+    document.getElementById('seg-manual').classList.toggle('active', !isAuto);
+    document.getElementById('tgt-panel-auto').classList.toggle('active', isAuto);
+    document.getElementById('tgt-panel-manual').classList.toggle('active', !isAuto);
+    if (!isAuto) { renderKwLeft(); renderCatLeft(); renderRight(); }
+  }
+
+  function switchPillTab(tab) {
+    const isKw = tab === 'kw';
+    document.getElementById('pane-kw').style.display  = isKw ? 'block' : 'none';
+    document.getElementById('pane-cat').style.display = isKw ? 'none'  : 'block';
+    document.getElementById('pt-kw').classList.toggle('active',  isKw);
+    document.getElementById('pt-cat').classList.toggle('active', !isKw);
+  }
+
+  function switchSrcTab(src) {
+    const isAi = src === 'ai';
+    document.getElementById('st-pane-ai').style.display     = isAi ? 'block' : 'none';
+    document.getElementById('st-pane-manual').style.display = isAi ? 'none'  : 'block';
+    document.getElementById('st-ai').classList.toggle('active',     isAi);
+    document.getElementById('st-manual').classList.toggle('active', !isAi);
+  }
+
+  function filterRight(tab) {
+    rightFilter = tab;
+    ['all','kw','cat'].forEach(t => document.getElementById('krf-' + t).classList.toggle('active', t === tab));
+    renderRight();
+  }
+
+  function renderKwLeft(filter) {
+    filter = (filter || '').toLowerCase();
+    const list = document.getElementById('kw-left-list');
+    if (!list) return;
+    const rows = kwSuggestions.filter(k => k.text.toLowerCase().includes(filter));
+    if (!rows.length) { list.innerHTML = '<div class="kw-right-empty">No keywords found.</div>'; return; }
+    list.innerHTML = '';
+    rows.forEach(function(k) {
+      const div = document.createElement('div');
+      div.className = 'kw-row';
+      div.innerHTML =
+        '<div class="kw-row-info">' +
+          '<div class="kw-row-name">' + k.text + '</div>' +
+          '<div class="kw-row-vol">'  + k.vol  + '</div>' +
+        '</div>';
+      const btnE = document.createElement('button');
+      btnE.className = 'kw-pill exact';
+      btnE.textContent = 'Exact +';
+      btnE.addEventListener('click', function() { addTarget(k.text, 'Exact', false); });
+      const btnP = document.createElement('button');
+      btnP.className = 'kw-pill phrase';
+      btnP.textContent = 'Phrase +';
+      btnP.addEventListener('click', function() { addTarget(k.text, 'Phrase', false); });
+      div.appendChild(btnE);
+      div.appendChild(btnP);
+      list.appendChild(div);
+    });
+  }
+  function filterKwList() { renderKwLeft(document.getElementById('kw-srch-inp').value); }
+
+  function renderCatLeft(filter) {
+    filter = (filter || '').toLowerCase();
+    const list = document.getElementById('cat-left-list');
+    if (!list) return;
+    const cats = catList.filter(c => c.toLowerCase().includes(filter));
+    list.innerHTML = '';
+    cats.forEach(function(c) {
+      const div = document.createElement('div');
+      div.className = 'cat-row';
+      div.innerHTML =
+        '<span class="cat-chevron">&#8964;</span>' +
+        '<span class="cat-name">' + c + '</span>' +
+        '<button class="cat-refine">Refine <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>';
+      const addBtn = document.createElement('button');
+      addBtn.className = 'cat-add';
+      addBtn.textContent = '+';
+      addBtn.addEventListener('click', function() { addTarget(c, 'Category', true); });
+      div.appendChild(addBtn);
+      list.appendChild(div);
+    });
+  }
+  function filterCatList() { renderCatLeft(document.getElementById('cat-srch-inp').value); }
+
+  function addTarget(text, matchType, isCategory) {
+    addedTargets.push({ text: text, matchType: matchType, isCategory: isCategory, checked: false, bid: '' });
+    renderRight();
+    updateActionRow();
+  }
+
+  function addKwsFromPaste() {
+    const raw = document.getElementById('kw-paste-inp').value.trim();
+    if (!raw) return;
+    raw.split(/[,\n]+/).map(function(k) { return k.trim(); }).filter(Boolean).forEach(function(text) {
+      addedTargets.push({ text: text, matchType: 'Exact', isCategory: false, checked: false, bid: '' });
+    });
+    document.getElementById('kw-paste-inp').value = '';
+    renderRight(); updateActionRow();
+  }
+
+  function removeTarget(idx) {
+    addedTargets.splice(idx, 1);
+    renderRight(); updateActionRow();
+  }
+
+  function removeSelected() {
+    for (let i = addedTargets.length - 1; i >= 0; i--) {
+      if (addedTargets[i].checked) addedTargets.splice(i, 1);
+    }
+    renderRight(); updateActionRow();
+  }
+
+  function handleSelectAll(checked) {
+    addedTargets.forEach(function(t) { t.checked = checked; });
+    const chk = document.getElementById('chk-select-all');
+    if (chk) chk.checked = checked;
+    renderRight(); updateActionRow();
+  }
+
+  function toggleCheck(idx, checked) {
+    addedTargets[idx].checked = checked;
+    const chk = document.getElementById('chk-select-all');
+    if (chk) {
+      const any = addedTargets.some(function(t) { return t.checked; });
+      const all = addedTargets.length > 0 && addedTargets.every(function(t) { return t.checked; });
+      chk.checked = all;
+      chk.indeterminate = any && !all;
+    }
+    updateActionRow();
+  }
+
+  function updateActionRow() {
+    const any = addedTargets.some(function(t) { return t.checked; });
+    const all = addedTargets.length > 0 && addedTargets.every(function(t) { return t.checked; });
+    const lbl = document.getElementById('btn-unselect-lbl');
+    const rem = document.getElementById('btn-remove-sel');
+    const apl = document.getElementById('btn-apply-bids');
+    if (lbl) lbl.textContent = all ? 'Unselect All' : 'Select All';
+    if (rem) rem.classList.toggle('show', any);
+    if (apl) apl.classList.toggle('enabled', any);
+  }
+
+  function toggleApplyDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('apply-bids-dd').classList.toggle('open');
+  }
+  document.addEventListener('click', function() {
+    const dd = document.getElementById('apply-bids-dd');
+    if (dd) dd.classList.remove('open');
+  });
+  function applyBulkBid() {
+    document.getElementById('apply-bids-dd').classList.remove('open');
+  }
+
+  function renderRight() {
+    const body  = document.getElementById('kw-right-body');
+    const empty = document.getElementById('kw-right-empty');
+    if (!body) return;
+    Array.from(body.querySelectorAll('.added-row')).forEach(function(e) { e.remove(); });
+    let filtered = addedTargets;
+    if (rightFilter === 'kw')  filtered = addedTargets.filter(function(t) { return !t.isCategory; });
+    if (rightFilter === 'cat') filtered = addedTargets.filter(function(t) { return  t.isCategory; });
+    if (!filtered.length) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    filtered.forEach(function(t) {
+      const realIdx = addedTargets.indexOf(t);
+      const d = document.createElement('div');
+      d.className = 'added-row';
+      const badgeType  = t.isCategory ? 'cat' : 'kw';
+      const badgeLabel = t.isCategory ? 'CATEGORY' : 'KEYWORD';
+      // Row structure
+      const chk = document.createElement('input');
+      chk.type = 'checkbox'; chk.checked = t.checked; chk.className = 'kw-sel-check';
+      chk.addEventListener('change', function() { toggleCheck(realIdx, chk.checked); });
+      const info = document.createElement('div');
+      info.style.flex = '1';
+      info.innerHTML =
+        '<div class="added-row-badges">' +
+          '<span class="badge-' + badgeType + '">' + badgeLabel + '</span>' +
+          '<span class="badge-match">' + t.matchType.toUpperCase() + '</span>' +
+        '</div>' +
+        '<div class="added-row-name">' + t.text + '</div>' +
+        '<div class="added-row-sub">Approx. search volume: 500-1000</div>';
+      const bidCol = document.createElement('div');
+      bidCol.className = 'added-row-bid-col';
+      bidCol.innerHTML =
+        '<div class="added-row-bid-wrap">' +
+          '<span class="added-row-currency">AED</span>' +
+          '<input class="added-row-bid-inp" type="number" placeholder="0.00" value="' + t.bid + '">' +
+        '</div>' +
+        '<span class="added-row-suggested">Suggested: 0.50-0.96</span>';
+      bidCol.querySelector('input').addEventListener('change', function(e) { addedTargets[realIdx].bid = e.target.value; });
+      const delBtn = document.createElement('button');
+      delBtn.className = 'kw-del-btn'; delBtn.innerHTML = '&times;';
+      delBtn.addEventListener('click', function() { removeTarget(realIdx); });
+      d.appendChild(chk); d.appendChild(info); d.appendChild(bidCol); d.appendChild(delBtn);
+      body.appendChild(d);
+    });
+  }
+
+  // ══════════════════════════════
+  // INIT
+  // ══════════════════════════════
+  renderLeftProducts();
+  renderRightProducts();
+  checkSellerLock();
+  // ══════════════════════════════
+  // NEGATIVE TARGETING
+  // ══════════════════════════════
+  let negMatchType = 'exact';
+  const negKeywords = [];
+
+  function selectNegMatch(type) {
+    negMatchType = type;
+    document.getElementById('neg-pill-exact').classList.toggle('active',  type === 'exact');
+    document.getElementById('neg-pill-phrase').classList.toggle('active', type === 'phrase');
+  }
+
+  function addNegKws() {
+    const raw = document.getElementById('neg-textarea').value.trim();
+    if (!raw) return;
+    const limit = negMatchType === 'exact' ? 20 : 20;
+    const existing = negKeywords.filter(function(k) { return k.type === negMatchType; }).length;
+    raw.split(/[,\n]+/).map(function(k) { return k.trim(); }).filter(Boolean).forEach(function(text) {
+      const count = negKeywords.filter(function(k) { return k.type === negMatchType; }).length;
+      if (!text || count >= limit) return;
+      if (!negKeywords.find(function(k) { return k.text === text && k.type === negMatchType; })) {
+        negKeywords.push({ text: text, type: negMatchType });
+      }
+    });
+    document.getElementById('neg-textarea').value = '';
+    renderNegList();
+  }
+
+  function removeNegKw(idx) {
+    negKeywords.splice(idx, 1);
+    renderNegList();
+  }
+
+  function renderNegList() {
+    const list  = document.getElementById('neg-kw-list');
+    const empty = document.getElementById('neg-empty');
+    const countEl = document.getElementById('neg-count');
+    if (countEl) countEl.textContent = negKeywords.length;
+    Array.from(list.querySelectorAll('.neg-kw-item')).forEach(function(e) { e.remove(); });
+    if (!negKeywords.length) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    negKeywords.forEach(function(k, i) {
+      const div = document.createElement('div');
+      div.className = 'neg-kw-item';
+      const info = document.createElement('div');
+      info.className = 'neg-kw-info';
+      info.innerHTML = '<div class="neg-kw-name">' + k.text + '</div>' +
+                       '<div class="neg-kw-type">Match: ' + (k.type.charAt(0).toUpperCase() + k.type.slice(1)) + '</div>';
+      const del = document.createElement('button');
+      del.className = 'neg-kw-del'; del.innerHTML = '&times;';
+      del.addEventListener('click', function() { removeNegKw(i); });
+      div.appendChild(info);
+      div.appendChild(del);
+      list.appendChild(div);
+    });
+  }
+
+  // ══════════════════════════════
+  // SECTION 7: TOP OF SEARCH
+  // ══════════════════════════════
+  function validateTos(input) {
+    const val = parseFloat(input.value);
+    const err  = document.getElementById('tos-error');
+    const hint = document.getElementById('tos-hint');
+    const comp = document.getElementById('tos-computed');
+    if (input.value && (isNaN(val) || val < 10 || val > 900)) {
+      err.style.display  = 'flex';
+      hint.style.display = 'none';
+    } else {
+      err.style.display  = 'none';
+      hint.style.display = 'block';
+      if (comp && !isNaN(val)) {
+        comp.textContent = (1 + val / 100).toFixed(2);
+      }
+    }
+  }
+
+  // ══════════════════════════════
+  // SECTION 8: GENERAL SETTINGS
+  // ══════════════════════════════
+  function selectBudget(type) {
+    document.getElementById('gs-bud-shared').classList.toggle('selected',   type === 'shared');
+    document.getElementById('gs-bud-campaign').classList.toggle('selected', type === 'campaign');
+  }
+
+  function toggleNoEndDate(checked) {
+    const endInput = document.getElementById('gs-end-date');
+    if (endInput) {
+      endInput.disabled = checked;
+      if (checked) endInput.value = '';
+      else endInput.value = '25 Jun 2025';
+    }
+  }
+
+  // ══════════════════════════════
+  // BID MODE CARDS + CHECKBOX WIRING
+  // ══════════════════════════════
+  (function() {
+
+    // — Bid mode card selection —
+    var cardAmount    = document.getElementById('bmc-amount');
+    var cardPlacement = document.getElementById('bmc-placement');
+
+    function selectBidModeEvt(mode) {
+      cardAmount.classList.toggle('selected',    mode === 'amount');
+      cardPlacement.classList.toggle('selected', mode === 'placement');
+    }
+
+    if (cardAmount) {
+      cardAmount.addEventListener('click', function() { selectBidModeEvt('amount'); });
+    }
+    if (cardPlacement) {
+      cardPlacement.addEventListener('click', function() { selectBidModeEvt('placement'); });
+    }
+
+    // — Placement checkboxes —
+    function applyCol(type, checked) {
+      var other    = type === 'kw' ? 'cat' : 'kw';
+      var otherChk = document.getElementById('chk-' + other);
+      // Enforce at least 1 always checked
+      if (!checked && otherChk && !otherChk.checked) {
+        document.getElementById('chk-' + type).checked = true;
+        return;
+      }
+      var col = document.getElementById('plc-col-' + type);
+      var inp = document.getElementById('inp-' + type);
+      if (col) { col.style.opacity = checked ? '1' : '0.4'; col.style.pointerEvents = checked ? '' : 'none'; }
+      if (inp) { inp.disabled = !checked; }
+    }
+
+    // Use event delegation on the placement card to catch checkbox changes
+    if (cardPlacement) {
+      cardPlacement.addEventListener('change', function(e) {
+        if (e.target && e.target.type === 'checkbox') {
+          e.stopPropagation();
+          var id = e.target.id;
+          if (id === 'chk-kw')  applyCol('kw',  e.target.checked);
+          if (id === 'chk-cat') applyCol('cat', e.target.checked);
+        }
+      });
+      // Stop checkbox clicks from bubbling to card click handler
+      cardPlacement.addEventListener('click', function(e) {
+        if (e.target && e.target.type === 'checkbox') {
+          e.stopPropagation();
+        }
+      });
+    }
+
+  }());
+
+</script>
+
+</body>
+</html>
