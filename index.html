@@ -810,6 +810,33 @@
     box-shadow: 0 0 0 3px rgba(67,97,238,0.08);
   }
   .tgt-tab-btn.active:hover { background: var(--blue-light); }
+
+  /* Disabled manual tab state */
+  .tgt-tab-btn.disabled {
+    opacity: 0.5; cursor: not-allowed; pointer-events: none;
+    background: var(--bg); border-color: var(--border);
+  }
+  .tgt-tab-btn.disabled .tgt-tab-title { color: var(--text-3); }
+  .tgt-tab-btn.disabled .tgt-tab-desc  { color: var(--text-3); }
+
+  /* Lock badge inside manual tab */
+  .tgt-locked-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 700; color: var(--orange);
+    background: #FFF3E0; border: 1px solid #FFCCBC;
+    padding: 2px 7px; border-radius: 99px; margin-left: 6px;
+    white-space: nowrap;
+  }
+  .tgt-locked-badge svg {
+    width: 9px; height: 9px; stroke: currentColor;
+    fill: none; stroke-width: 2.5;
+  }
+
+  /* Lock hint below description */
+  .tgt-locked-hint {
+    font-size: 10.5px; color: var(--orange);
+    font-weight: 500; padding-left: 22px; margin-top: 2px;
+  }
   .tgt-tab-top { display: flex; align-items: center; gap: 7px; }
   .tgt-tab-top svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
   .tgt-tab-title { font-size: 13px; font-weight: 700; color: var(--text-2); }
@@ -905,20 +932,19 @@
   .plc-col-body { display: flex; flex-direction: column; gap: 4px; }
   .plc-why { font-size: 11px; color: var(--blue); text-decoration: underline; font-weight: 600; }
 
-  /* 5.6 — Range hint more prominent */
+  /* 5.6 — Range hint — inline style matching reference image */
   .plc-range {
-    font-size: 11px; color: var(--text-2); margin-top: 6px;
+    font-size: 11px; color: var(--text-3); margin-top: 6px;
     display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
   }
   .plc-range-vals {
-    font-weight: 700; color: var(--blue);
-    background: var(--blue-light); padding: 1px 7px;
-    border-radius: 3px; font-size: 11px;
+    font-weight: 700; color: var(--text); font-size: 11px;
   }
-  /* 5.5 — Why this range link */
-  .plc-range a {
-    color: var(--blue); text-decoration: underline;
-    font-weight: 600; font-size: 11px;
+  .plc-range-why {
+    color: var(--text-3); font-size: 11px;
+  }
+  .plc-range .info-icon {
+    width: 13px; height: 13px; font-size: 8px; flex-shrink: 0;
   }
 
   /* Manual panel description */
@@ -1812,8 +1838,13 @@
         <div class="tgt-tab-top">
           <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           <span class="tgt-tab-title">Manual Targeting</span>
+          <span class="tgt-locked-badge" id="tgt-locked-badge" style="display:none;">
+            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Unavailable
+          </span>
         </div>
         <span class="tgt-tab-desc">Select specific keywords or categories to reach your target audience</span>
+        <span class="tgt-locked-hint" id="tgt-locked-hint" style="display:none;">Requires Dynamic Bid (Down Only) or Fixed</span>
       </button>
     </div>
 
@@ -1880,9 +1911,10 @@
                       <input class="bid-inp" id="inp-kw" type="number" placeholder="0.00">
                     </div>
                     <div class="plc-range">
-                      Recommended Range <span class="plc-range-vals">&#x62F; 0.30 – &#x62F; 0.36</span>
+                      Recommended Range between <span class="plc-range-vals">&#x62F; 0.30 - &#x62F; 0.36</span>
+                      <span class="plc-range-why">Why this range ?</span>
+                      <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
                     </div>
-                    <a class="plc-why" href="#" onclick="return false;">Why this range?</a>
                   </div>
                 </div>
 
@@ -1899,9 +1931,10 @@
                       <input class="bid-inp" id="inp-cat" type="number" placeholder="0.00">
                     </div>
                     <div class="plc-range">
-                      Recommended Range <span class="plc-range-vals">&#x62F; 0.30 – &#x62F; 0.36</span>
+                      Recommended Range between <span class="plc-range-vals">&#x62F; 0.30 - &#x62F; 0.36</span>
+                      <span class="plc-range-why">Why this range ?</span>
+                      <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
                     </div>
-                    <a class="plc-why" href="#" onclick="return false;">Why this range?</a>
                   </div>
                 </div>
 
@@ -2393,6 +2426,25 @@
     ['updown','down','fixed'].forEach(t => {
       document.getElementById('bid-' + t).classList.toggle('selected', t === type);
     });
+    const isUpDown    = type === 'updown';
+    const manualTab   = document.getElementById('seg-manual');
+    const lockedBadge = document.getElementById('tgt-locked-badge');
+    const lockedHint  = document.getElementById('tgt-locked-hint');
+    if (manualTab)   manualTab.classList.toggle('disabled', isUpDown);
+    if (lockedBadge) lockedBadge.style.display = isUpDown ? 'inline-flex' : 'none';
+    if (lockedHint)  lockedHint.style.display  = isUpDown ? 'block' : 'none';
+    // If manual was active and Up&Down selected, force switch to auto
+    if (isUpDown) {
+      const manualPanel = document.getElementById('tgt-panel-manual');
+      const autoPanel   = document.getElementById('tgt-panel-auto');
+      const autoTab     = document.getElementById('seg-auto');
+      if (manualPanel && manualPanel.classList.contains('active')) {
+        manualPanel.classList.remove('active');
+        autoPanel.classList.add('active');
+        if (manualTab) manualTab.classList.remove('active');
+        if (autoTab)   autoTab.classList.add('active');
+      }
+    }
   }
 
   // ══════════════════════════════
@@ -2619,6 +2671,15 @@
   renderLeftProducts();
   renderRightProducts();
   checkSellerLock();
+  // Dynamic Up&Down is default — disable Manual tab on load
+  (function() {
+    var manualTab   = document.getElementById('seg-manual');
+    var lockedBadge = document.getElementById('tgt-locked-badge');
+    var lockedHint  = document.getElementById('tgt-locked-hint');
+    if (manualTab)   manualTab.classList.add('disabled');
+    if (lockedBadge) lockedBadge.style.display = 'inline-flex';
+    if (lockedHint)  lockedHint.style.display  = 'block';
+  }());
   // ══════════════════════════════
   // NEGATIVE TARGETING
   // ══════════════════════════════
