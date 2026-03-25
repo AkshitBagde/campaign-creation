@@ -1575,42 +1575,6 @@
   @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
   .page-header { animation: fadeUp 0.25s ease both; }
   .card { animation: fadeUp 0.25s 0.05s ease both; }
-
-  /* ── BID / BUDGET FEEDBACK SYSTEM ── */
-  .bid-input-wrap{position:relative;width:360px}
-  .bid-currency{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:#777;display:flex;align-items:center;gap:3px;pointer-events:none}
-  .bid-currency svg{width:12px;height:12px}
-  .bid-field{width:100%;padding:8px 12px 8px 44px;font-size:14px;font-weight:500;border:1.5px solid #d0d0d0;border-radius:6px;outline:none;background:#fff;color:#1a1a1a;transition:border-color .15s;-moz-appearance:textfield;font-family:var(--font)}
-  .bid-field::-webkit-outer-spin-button,.bid-field::-webkit-inner-spin-button{-webkit-appearance:none}
-  .bid-field:focus{border-color:#378ADD}
-  .bid-field.good{border-color:#3B6D11}
-  .bid-field.warn{border-color:#BA7517}
-  .bid-field.red-border{border-color:#a32d2d}
-  .budget-input-wrap{position:relative;width:360px}
-  .budget-currency{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:#777;display:flex;align-items:center;gap:3px;pointer-events:none}
-  .budget-currency svg{width:12px;height:12px}
-  .budget-field{width:100%;padding:8px 12px 8px 44px;font-size:14px;font-weight:500;border:1.5px solid #d0d0d0;border-radius:6px;outline:none;background:#fff;color:#1a1a1a;transition:border-color .15s;-moz-appearance:textfield;font-family:var(--font)}
-  .budget-field::-webkit-outer-spin-button,.budget-field::-webkit-inner-spin-button{-webkit-appearance:none}
-  .budget-field:focus{border-color:#378ADD}
-  .budget-field.good{border-color:#3B6D11}
-  .budget-field.warn{border-color:#BA7517}
-  .budget-field.red-border{border-color:#a32d2d}
-  .feedback-strip{display:flex;align-items:center;gap:8px;padding:0;max-height:0;overflow:hidden;opacity:0;border-radius:6px;font-size:12px;margin-top:0;transition:max-height .28s ease,opacity .2s ease,padding .2s ease,margin .2s ease;width:360px}
-  .feedback-strip.visible{max-height:120px;opacity:1;padding:10px 14px;margin-top:6px}
-  .feedback-strip.warn{background:#fdfaf2;border:1px solid #e8d99a;color:#8a6a1f}
-  .feedback-strip.red{background:#fff2f2;border:1px solid #f5b8b8;color:#a32d2d}
-  .feedback-strip.green{background:#f4f9ee;border:1px solid #c8dda8;color:#4a7a20}
-  .feedback-strip svg{width:14px;height:14px;flex-shrink:0;align-self:flex-start;margin-top:2px}
-  .feedback-text{flex:1;min-width:0}
-  .feedback-title{font-weight:600;font-size:11px;line-height:1.4}
-  .feedback-sub{font-size:10px;opacity:.9;margin-top:2px;line-height:1.4}
-  .apply-btn{flex-shrink:0;margin-left:12px;padding:6px 14px;font-size:12px;font-weight:500;color:#fff;border:none;border-radius:5px;cursor:pointer;white-space:nowrap;align-self:center;font-family:var(--font)}
-  .apply-btn:hover{opacity:.88}
-  .apply-btn.amber{background:#9a7520}
-  .apply-btn.danger{background:#a32d2d}
-  .inline-error{font-size:12px;color:#a32d2d;font-weight:500;margin-top:5px;display:none;width:360px}
-  .inline-error.visible{display:block}
-  .bid-minimum{font-size:11px;color:#aaa;margin-top:5px}
 </style>
 </head>
 <body>
@@ -2030,7 +1994,13 @@
           <div class="tgt-tab-desc">Select specific keywords, products or categories to target your audience.</div>
           <div class="tgt-locked-hint" id="tgt-locked-hint" style="display:none;">Available in Dynamic Bid (Down Only) or Fixed Bidding</div>
         </div>
+<<<<<<< HEAD
+        <span class="tgt-tab-desc">Select specific keywords or categories to reach your target audience</span>
+        <span class="tgt-locked-hint" id="tgt-locked-hint" style="display:none;">Available in Dynamic Bid (Down Only) or Fixed Bidding</span>
+      </button>
+=======
       </div>
+>>>>>>> 9e2d8a6 (index new)
     </div>
 
     <!-- AUTO PANEL BOX -->
@@ -2048,17 +2018,15 @@
         <p>This can be adjusted later in real-time based on your chosen bidding strategy.</p>
       </div>
 
-      <!-- Bid Amount — feedback system -->
-      <div style="margin-bottom:4px;font-size:12px;font-weight:600;color:var(--text-2);">Bid Amount</div>
-      <div class="bid-input-wrap">
-        <div class="bid-currency">
-          <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="currentColor" stroke-width="1"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-          ₿
+      <!-- Bid Amount — simple input -->
+      <div class="bid-field-wrap">
+        <span class="bid-field-label">Bid Amount</span>
+        <div class="bid-field-row">
+          <span class="bid-pfx">&#x62F;</span>
+          <input class="bid-inp" id="auto-bid-inp" type="number" placeholder="0.00" min="0.21" step="0.01">
         </div>
-        <input class="bid-field good" id="bid-input" type="number" min="0" step="0.01" value="1.14"/>
+        <span class="bid-hint">Minimum &#x62F; 0.21</span>
       </div>
-      <div class="inline-error" id="bid-inline-error"></div>
-      <div class="feedback-strip" id="bid-feedback"></div>
         </div><!-- /tgt-panel-auto-inner -->
       </div><!-- /tgt-panel-box-body -->
     </div><!-- /tgt-panel-box auto -->
@@ -2345,16 +2313,11 @@
           </div>
         </div>
       </div>
-      <div class="gs-field" style="max-width:560px;">
-        <div class="budget-input-wrap">
-          <div class="budget-currency">
-            <svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="currentColor" stroke-width="1"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
-            ₿
-          </div>
-          <input class="budget-field good" id="budget-input" type="number" min="0" step="1" value="3000"/>
+      <div class="gs-field" style="max-width:260px;">
+        <div class="gs-daily-row">
+          <span class="gs-daily-prefix">&#x62F;</span>
+          <input class="gs-daily-inp" type="number" id="gs-daily-budget" placeholder="1000" min="0.1" step="0.1" value="1000">
         </div>
-        <div class="inline-error" id="budget-inline-error"></div>
-        <div class="feedback-strip" id="budget-feedback"></div>
       </div>
     </div>
 
@@ -3241,109 +3204,6 @@
     }
 
   }());
-
-  // ── BID / BUDGET FEEDBACK SYSTEM ──
-  const BID_REC = 1.14, BID_MIN = 0.21;
-  const BUDGET_REC = 3000, BUDGET_MIN = 5;
-
-  function iconSVG(type) {
-    const d = {
-      warn:  `<path d="M7 3.5v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="7" cy="10" r=".8" fill="currentColor"/><path d="M1.5 12.5l5.5-10 5.5 10z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/>`,
-      green: `<path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`
-    };
-    return `<svg viewBox="0 0 14 14" fill="none">${d[type]}</svg>`;
-  }
-
-  function showAmberBox(feedbackEl, labels, recLabel, applyId) {
-    feedbackEl.className = 'feedback-strip warn visible';
-    feedbackEl.innerHTML = iconSVG('warn') +
-      `<div class="feedback-text">
-        <div class="feedback-title">${labels.warnTitle}</div>
-        <div class="feedback-sub">${labels.warnSub}</div>
-      </div>
-      <button class="apply-btn amber" id="${applyId}">Apply ₿${recLabel}</button>`;
-  }
-
-  function evaluate(inputEl, errorEl, feedbackEl, rec, minVal, labels, applyId) {
-    const raw = inputEl.value.trim();
-    inputEl.classList.remove('good', 'warn', 'red-border');
-    errorEl.className = 'inline-error';
-    errorEl.textContent = '';
-
-    const recLabel = rec >= 100 ? rec.toLocaleString('en-IN') : rec.toFixed(2);
-    const minLabel = minVal >= 100 ? minVal.toLocaleString('en-IN') : minVal.toFixed(2);
-
-    if (raw === '' || isNaN(parseFloat(raw))) {
-      inputEl.classList.add('red-border');
-      errorEl.className = 'inline-error visible';
-      errorEl.textContent = `Minimum allowed ${labels.unit} is ₿${minLabel}`;
-      showAmberBox(feedbackEl, labels, recLabel, applyId);
-      const btn = document.getElementById(applyId);
-      if (btn) btn.onclick = function() {
-        inputEl.value = rec >= 100 ? rec : rec.toFixed(2);
-        evaluate(inputEl, errorEl, feedbackEl, rec, minVal, labels, applyId);
-      };
-      return;
-    }
-
-    const val = parseFloat(raw);
-    const eps = rec * 0.001;
-
-    if (val < minVal) {
-      inputEl.classList.add('red-border');
-      errorEl.className = 'inline-error visible';
-      errorEl.textContent = `Minimum allowed ${labels.unit} is ₿${minLabel}`;
-      showAmberBox(feedbackEl, labels, recLabel, applyId);
-    } else if (Math.abs(val - rec) < eps) {
-      inputEl.classList.add('good');
-      feedbackEl.className = 'feedback-strip green visible';
-      feedbackEl.innerHTML = iconSVG('green') +
-        `<div class="feedback-text">
-          <div class="feedback-title">${labels.greenTitle}</div>
-          <div class="feedback-sub">${labels.greenSub}</div>
-        </div>`;
-    } else if (val > rec) {
-      feedbackEl.className = 'feedback-strip';
-      feedbackEl.innerHTML = '';
-    } else {
-      inputEl.classList.add('warn');
-      showAmberBox(feedbackEl, labels, recLabel, applyId);
-    }
-
-    const btn = document.getElementById(applyId);
-    if (btn) btn.onclick = function() {
-      inputEl.value = rec >= 100 ? rec : rec.toFixed(2);
-      evaluate(inputEl, errorEl, feedbackEl, rec, minVal, labels, applyId);
-    };
-  }
-
-  const bidLabels = {
-    unit: 'bid',
-    greenTitle: 'Recommended bid applied.',
-    greenSub: 'Your campaign is set for best results.',
-    warnTitle: 'Higher bid gets you better placements.',
-    warnSub: 'Apply recommended bid for best results.'
-  };
-  const budgetLabels = {
-    unit: 'budget',
-    greenTitle: 'Recommended budget applied.',
-    greenSub: 'Your campaign will run all day.',
-    warnTitle: 'Higher budget keeps your ads running longer.',
-    warnSub: 'Apply recommended budget for best results.'
-  };
-
-  const bI  = document.getElementById('bid-input');
-  const bE  = document.getElementById('bid-inline-error');
-  const bF  = document.getElementById('bid-feedback');
-  const buI = document.getElementById('budget-input');
-  const buE = document.getElementById('budget-inline-error');
-  const buF = document.getElementById('budget-feedback');
-
-  if (bI)  bI.addEventListener('input',  function(){ evaluate(this, bE,  bF,  BID_REC,    BID_MIN,    bidLabels,    'apply-bid'); });
-  if (buI) buI.addEventListener('input', function(){ evaluate(this, buE, buF, BUDGET_REC, BUDGET_MIN, budgetLabels, 'apply-budget'); });
-
-  if (bI)  evaluate(bI,  bE,  bF,  BID_REC,    BID_MIN,    bidLabels,    'apply-bid');
-  if (buI) evaluate(buI, buE, buF, BUDGET_REC, BUDGET_MIN, budgetLabels, 'apply-budget');
 
 </script>
 
