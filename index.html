@@ -32,6 +32,8 @@
     --r-sm:         5px;
     --sh:           0 1px 3px rgba(0,0,0,0.06);
     --sh-md:        0 2px 10px rgba(0,0,0,0.09);
+    --rec:          #6C63FF;
+    --rec-light:    #F4F3FF;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -257,27 +259,6 @@
   }
   .tooltip-wrap:hover .tooltip-box { display: block; }
 
-  /* ── TABS (Manual / Bulk Upload) ── */
-  .tab-bar {
-    display: flex; gap: 0; margin-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .tab-btn {
-    display: flex; align-items: center; gap: 6px;
-    padding: 8px 14px 9px; font-size: 12px; font-weight: 600;
-    cursor: pointer; color: var(--text-3);
-    border: none; background: none; font-family: var(--font);
-    border-bottom: 2px solid transparent; margin-bottom: -1px;
-    transition: all 0.15s;
-  }
-  .tab-btn:hover { color: var(--text-2); }
-  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
-  .tab-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-  /* ── PRODUCT SPLIT LAYOUT ── */
-  .product-layout {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-  }
 
   /* ── PRODUCT PANEL (left / right shared) ── */
   .prod-panel {
@@ -477,6 +458,229 @@
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
 
+  /* Recommendation tags */
+  /* ✦ recommendation color — indigo/violet, feels "intelligent" */
+  :root { --rec: #6C63FF; --rec-light: #F4F3FF; }
+
+  .rec-tag {
+    font-size: 10px; font-weight: 500; padding: 2px 7px;
+    border-radius: 99px; text-transform: lowercase; letter-spacing: 0;
+    white-space: nowrap; flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 3px;
+    background: #F4F3FF; color: #8B87D4;
+  }
+  .rec-tag::before { content: '✦'; font-size: 9px; color: var(--rec); }
+  .rec-tag.high-potential,
+  .rec-tag.trending,
+  .rec-tag.competitor-gap,
+  .rec-tag.re-engage,
+  .rec-tag.new-catalog { background: #F4F3FF; color: #8B87D4; }
+  .pre-sel-label {
+    font-size: 9px; font-weight: 700; color: var(--blue);
+    background: var(--blue-light); padding: 1px 6px;
+    border-radius: 3px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .right-section-label {
+    font-size: 10px; font-weight: 400; color: var(--text-3);
+    text-transform: none; letter-spacing: 0;
+    padding: 5px 12px 3px; border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .right-section-label.rec-label {
+    background: #EDEEFF;
+    color: #5C58B0;
+    font-weight: 600;
+    border-top: none;
+    padding: 8px 12px 6px;
+  }
+  .right-section-label:first-child { border-top: none; }
+  .rec-panel-meta { font-size: 11px; color: var(--text-3); padding: 6px 12px 0; }
+
+  /* Category pill nav */
+  .cat-pill-bar {
+    display: flex; align-items: center; gap: 5px;
+    padding: 7px 12px; border-bottom: 1px solid var(--border);
+    flex-wrap: nowrap; flex-shrink: 0; overflow: hidden;
+  }
+  /* "Recommended offers" label in pill bar */
+  .rec-offers-label {
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  /* Info icon button */
+  .rec-info-btn {
+    width: 15px; height: 15px; border-radius: 50%;
+    border: 1.5px solid var(--border-mid); background: none;
+    font-size: 9px; font-weight: 700; color: var(--text-3);
+    cursor: pointer; font-family: var(--font);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; transition: all 0.15s;
+  }
+  .rec-info-btn:hover { border-color: var(--blue); color: var(--blue); }
+  /* Tooltip */
+  .rec-tooltip {
+    display: none; position: absolute; top: 20px; left: 0;
+    background: var(--navy); color: #fff; border-radius: var(--r);
+    padding: 10px 12px; width: 220px; font-size: 11px; line-height: 1.6;
+    z-index: 50; box-shadow: var(--sh-md);
+  }
+  .rec-tooltip.show { display: block; }
+  .rec-tooltip strong { font-weight: 600; display: block; margin-bottom: 4px; }
+  .rec-tooltip li { margin-left: 12px; margin-bottom: 3px; }
+  /* Add all text link */
+  .add-all-link {
+    font-size: 11px; font-weight: 600; color: var(--blue);
+    cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    margin-left: 4px; background: none; border: none;
+    font-family: var(--font); transition: opacity 0.15s; padding: 0;
+  }
+  .add-all-link:hover { opacity: 0.75; }
+  .add-all-link:disabled { color: var(--text-3); cursor: default; }
+  .cat-pill {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 99px; white-space: nowrap;
+    border: 1.5px solid var(--border); background: var(--white);
+    font-size: 10px; font-weight: 600; color: var(--text-2);
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .cat-pill:hover { border-color: var(--blue); color: var(--blue); }
+  .cat-pill.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .cat-pill.all-added { border-color: var(--green); background: #E8F5E9; color: var(--green); }
+  .cat-pill .pill-check { font-size: 9px; }
+
+  /* Add all button inside panel header */
+  .btn-add-all {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: var(--r-sm);
+    border: 1.5px solid var(--blue); background: var(--white);
+    font-size: 11px; font-weight: 600; color: var(--blue);
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-add-all:hover { background: var(--blue-light); }
+  .btn-add-all:disabled { border-color: var(--border); color: var(--text-3); cursor: default; background: var(--white); }
+
+  /* Add / Remove action buttons */
+  .prod-action {
+    width: 24px; height: 24px; border-radius: var(--r-sm);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: none; flex-shrink: 0; transition: all 0.15s;
+  }
+  .prod-action svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+  .prod-action.add { background: var(--blue-light); color: var(--blue); }
+  .prod-action.add:hover { background: var(--blue); color: white; }
+  .prod-action.remove { background: #FEF0F0; color: #E88080; }
+  .prod-action.remove:hover { background: #FDECEA; color: var(--red); }
+
+  /* Right panel empty state */
+  .prod-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px 16px; text-align: center; gap: 6px;
+  }
+  .prod-empty svg { width: 28px; height: 28px; stroke: var(--text-3); fill: none; stroke-width: 1.5; }
+  .prod-empty p { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+
+  /* ── BULK UPLOAD PANEL ── */
+  .bulk-template-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .bulk-template-icon {
+    width: 30px; height: 30px; border-radius: 5px;
+    background: #E8F5E9; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .bulk-template-icon svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; }
+  .bulk-template-info { flex: 1; }
+  .bulk-template-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .bulk-template-size { font-size: 11px; color: var(--text-3); }
+  .btn-download {
+    display: flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: var(--r-sm);
+    border: 1px solid var(--border); background: var(--white);
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-download:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-download svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+
+  /* Drop zone */
+  .drop-zone {
+    margin: 14px 14px 0;
+    border: 2px dashed var(--border-mid); border-radius: var(--r);
+    padding: 28px 16px; text-align: center; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--blue); background: var(--blue-light);
+  }
+  .drop-zone-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--blue-light); display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 10px;
+  }
+  .drop-zone-icon svg { width: 18px; height: 18px; stroke: var(--blue); fill: none; stroke-width: 2; }
+  .drop-zone p { font-size: 12px; color: var(--text-3); line-height: 1.6; }
+  .drop-zone a { color: var(--blue); font-weight: 600; text-decoration: none; }
+  .drop-zone small { font-size: 10px; color: var(--text-3); }
+  .drop-zone input[type="file"] { display: none; }
+
+  /* OR divider */
+  .or-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 12px 14px; font-size: 11px; color: var(--text-3);
+  }
+  .or-divider::before, .or-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* SKU paste area */
+  .paste-label { font-size: 11px; font-weight: 600; color: var(--text-2); padding: 0 14px; margin-bottom: 5px; }
+  .paste-area {
+    width: calc(100% - 28px); margin: 0 14px;
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    padding: 8px 10px; font-size: 12px; font-family: var(--font);
+    color: var(--text); resize: none; height: 72px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .paste-area:focus { border-color: var(--blue); }
+  .paste-area::placeholder { color: var(--text-3); }
+
+  .btn-add-products {
+    display: flex; align-items: center; gap: 5px;
+    margin: 8px 14px 14px auto; padding: 6px 14px;
+    border-radius: var(--r-sm); background: var(--blue); color: white;
+    border: none; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  }
+  .btn-add-products:hover { background: #3451d1; }
+  .btn-add-products svg { width: 12px; height: 12px; stroke: white; fill: none; stroke-width: 2.5; }
+
+  /* Uploaded file state */
+  .uploaded-file {
+    display: none; margin: 12px 14px 0;
+    background: #E8F5E9; border: 1px solid #A5D6A7;
+    border-radius: var(--r-sm); padding: 8px 12px;
+    align-items: center; gap: 8px;
+  }
+  .uploaded-file.show { display: flex; }
+  .uploaded-file svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; flex-shrink: 0; }
+  .uploaded-file-name { flex: 1; font-size: 12px; font-weight: 600; color: var(--green); }
+  .btn-remove-file {
+    font-size: 11px; color: var(--red); cursor: pointer;
+    border: none; background: none; font-family: var(--font);
+    font-weight: 600; transition: opacity 0.15s;
+  }
+  .btn-remove-file:hover { opacity: 0.7; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+
   /* ── PRICING MODEL ── */
   .pricing-options { display: flex; gap: 10px; margin-top: 4px; }
   .pricing-card {
@@ -514,15 +718,16 @@
 
 
   /* ── BIDDING STRATEGY ── */
-  .bidding-options { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .bidding-options { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
 
   .bid-card {
-    border: 1.5px solid var(--border); border-radius: var(--r);
-    padding: 14px 16px; cursor: pointer; transition: all 0.18s;
-    background: var(--white); display: flex; align-items: flex-start; gap: 14px;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; cursor: pointer; transition: all 0.15s;
+    background: var(--white); border-radius: var(--r);
+    border: 1.5px solid transparent;
   }
-  .bid-card:hover { border-color: var(--blue); }
-  .bid-card.selected { border-color: var(--blue); background: var(--blue-light); }
+  .bid-card:hover { background: var(--bg); }
+  .bid-card + .bid-card { border-top: none; }
 
   .bid-radio {
     width: 16px; height: 16px; border-radius: 50%;
@@ -531,42 +736,25 @@
     flex-shrink: 0; margin-top: 2px; transition: all 0.15s;
   }
   .bid-card.selected .bid-radio { border-color: var(--blue); background: var(--blue); }
-  .bid-radio-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: white; display: none;
-  }
+  .bid-radio-dot { width: 6px; height: 6px; border-radius: 50%; background: white; display: none; }
   .bid-card.selected .bid-radio-dot { display: block; }
 
   .bid-body { flex: 1; min-width: 0; }
-  .bid-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-  .bid-desc  { font-size: 11.5px; color: var(--text-2); line-height: 1.55; margin-bottom: 4px; }
-  .bid-example {
-    font-size: 11px; color: var(--text-3); line-height: 1.4;
-    background: rgba(0,0,0,0.03); border-radius: 4px;
-    padding: 5px 8px; border-left: 2px solid var(--border-mid);
-  }
-  .bid-card.selected .bid-example { border-left-color: var(--blue); }
+  .bid-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .bid-desc  { font-size: 11.5px; color: var(--text-3); line-height: 1.5; margin-top: 2px; }
 
-  /* 4.1 — Title row with Recommended badge */
   .bid-title-row {
     display: flex; align-items: center;
-    justify-content: space-between; margin-bottom: 4px;
+    justify-content: space-between; margin-bottom: 2px;
   }
-  .bid-title-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .bid-recommended-badge {
-    font-size: 10px; font-weight: 700; padding: 2px 8px;
-    border-radius: 99px; background: #E6F4EF; color: var(--green);
-    border: 1px solid #B7DFCF; letter-spacing: 0.2px; white-space: nowrap;
-    flex-shrink: 0;
-  }
+  .bid-title-left { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-  /* 4.5 — Strategy hint pill — same size as recommended badge */
+  /* 4.5 — Strategy hint — outlined pill, no fill */
   .bid-strategy-hint {
     display: inline-flex; align-items: center; gap: 4px;
-    font-size: 10px; font-weight: 700; color: #B7860A;
-    background: #FFFBEA; border: 1px solid #F5D200;
-    padding: 2px 8px; border-radius: 99px; flex-shrink: 0;
-    letter-spacing: 0.2px; white-space: nowrap;
+    font-size: 10.5px; font-weight: 500; color: var(--text-2);
+    border: 1px solid var(--border-mid); border-radius: 99px;
+    padding: 2px 8px; flex-shrink: 0; white-space: nowrap;
   }
   .bid-strategy-hint svg {
     width: 9px; height: 9px; stroke: currentColor;
@@ -707,10 +895,10 @@
     font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 3px;
     cursor: pointer; border: 1px solid; transition: all 0.15s; white-space: nowrap;
   }
-  .kw-pill.exact  { color: #1565C0; border-color: #90CAF9; background: #E3F2FD; }
-  .kw-pill.exact:hover  { background: #1565C0; color: white; }
-  .kw-pill.phrase { color: #6A1B9A; border-color: #CE93D8; background: #F3E5F5; }
-  .kw-pill.phrase:hover { background: #6A1B9A; color: white; }
+  .kw-pill.exact  { color: var(--text-2); border-color: var(--border-mid); background: var(--white); }
+  .kw-pill.exact:hover  { background: var(--blue-light); color: var(--blue); border-color: var(--blue); }
+  .kw-pill.phrase { color: var(--text-2); border-color: var(--border-mid); background: var(--white); }
+  .kw-pill.phrase:hover { background: var(--blue-light); color: var(--blue); border-color: var(--blue); }
 
   /* Manual upload textarea */
   .kw-paste-box {
@@ -791,61 +979,65 @@
 
 
   /* ── TARGETING — Card-style tabs matching Section 2 ── */
-  .tgt-tab-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
+  /* Vertical radio selector — Section 4 style */
+  .tgt-tab-bar { display: flex; flex-direction: column; gap: 0; margin-bottom: 14px; }
   .tgt-tab-btn {
-    display: flex; flex-direction: column; align-items: flex-start;
-    gap: 3px; padding: 12px 14px; cursor: pointer;
-    border: 1.5px solid var(--border); border-radius: var(--r);
-    background: var(--white); font-family: var(--font);
-    transition: all 0.18s; text-align: left;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; cursor: pointer; transition: background 0.15s;
+    background: var(--white); border-radius: var(--r);
+    border: 1.5px solid transparent;
   }
-  .tgt-tab-btn:hover { border-color: var(--blue); background: var(--white); }
-  .tgt-tab-btn.active {
-    border-color: var(--blue); background: var(--blue-light);
-    box-shadow: 0 0 0 3px rgba(67,97,238,0.08);
-  }
-  .tgt-tab-btn.active:hover { background: var(--blue-light); }
+  .tgt-tab-btn:hover { background: var(--bg); }
+  .tgt-tab-btn + .tgt-tab-btn { border-top: none; }
+  .tgt-tab-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-  /* Disabled manual tab state */
-  .tgt-tab-btn.disabled {
-    opacity: 0.5; cursor: not-allowed; pointer-events: none;
-    background: var(--bg); border-color: var(--border);
+  /* Radio dot — reuse bid-radio sizing */
+  .tgt-radio-bullet {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-mid); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px; transition: all 0.15s;
   }
-  .tgt-tab-btn.disabled .tgt-tab-title { color: var(--text-3); }
-  .tgt-tab-btn.disabled .tgt-tab-desc  { color: var(--text-3); }
+  .tgt-tab-btn.active .tgt-radio-bullet { border-color: var(--blue); background: var(--blue); }
+  .tgt-radio-bullet-inner { width: 6px; height: 6px; border-radius: 50%; background: var(--white); display: none; }
+  .tgt-tab-btn.active .tgt-radio-bullet-inner { display: block; }
 
-  /* Lock badge inside manual tab */
+  /* Body text */
+  .tgt-tab-body { flex: 1; min-width: 0; }
+  .tgt-tab-title-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .tgt-tab-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .tgt-tab-desc { font-size: 11.5px; color: var(--text-3); line-height: 1.5; }
+
+  /* Lock badge */
   .tgt-locked-badge {
     display: inline-flex; align-items: center; gap: 3px;
     font-size: 10px; font-weight: 700; color: var(--orange);
     background: #FFF3E0; border: 1px solid #FFCCBC;
-    padding: 2px 7px; border-radius: 99px; margin-left: 6px;
+    padding: 2px 7px; border-radius: 99px;
     white-space: nowrap;
   }
-  .tgt-locked-badge svg {
-    width: 9px; height: 9px; stroke: currentColor;
-    fill: none; stroke-width: 2.5;
-  }
+  .tgt-locked-badge svg { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+  .tgt-locked-hint { font-size: 10px; color: var(--orange); font-weight: 500; margin-top: 3px; }
 
-  /* Lock hint below description */
-  .tgt-locked-hint {
-    font-size: 10.5px; color: var(--orange);
-    font-weight: 500; padding-left: 22px; margin-top: 2px;
+  /* Titled panel box */
+  .tgt-panel-box {
+    display: none;
+    border: 1px solid var(--border); border-radius: var(--r);
+    overflow: hidden;
   }
-  .tgt-tab-top { display: flex; align-items: center; gap: 7px; }
-  .tgt-tab-top svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-  .tgt-tab-title { font-size: 13px; font-weight: 700; color: var(--text-2); }
-  .tgt-tab-btn.active .tgt-tab-title { color: var(--blue); }
-  .tgt-tab-desc { font-size: 11px; color: var(--text-3); line-height: 1.4; padding-left: 22px; }
-  .tgt-tab-btn.active .tgt-tab-desc { color: #6d84f0; }
+  .tgt-panel-box.active { display: block; }
+  .tgt-panel-box-title {
+    padding: 10px 14px; background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tgt-panel-box-title svg { width: 12px; height: 12px; stroke: var(--text-3); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .tgt-panel-box-body { padding: 14px; }
+  .tgt-panel-box-body-flush { padding: 0; }
 
-  /* Content panels */
-  .tgt-panel { display: none; }
+  /* Legacy panel visibility — kept for JS compat */
+  .tgt-panel { display: block; }
   .tgt-panel.active { display: block; }
 
   /* Auto panel description */
@@ -955,30 +1147,58 @@
   }
 
   /* Manual expand two-col */
-  .manual-cols { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .manual-cols { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; }
 
   /* Left panel wrapper */
-  .left-panel-box { border:1px solid var(--border); border-radius:var(--r); overflow:hidden; display:flex; flex-direction:column; }
+  .left-panel-box { border-radius:var(--r); overflow:visible; display:flex; flex-direction:column; min-width:0; width:100%; }
 
-  /* Pill tab toggle (Keywords | Categories) */
-  .pill-tabs { display:flex; gap:0; padding:8px; background:var(--bg); border-bottom:1px solid var(--border); }
-  .pill-tab {
-    flex:1; padding:7px 10px; font-size:12px; font-weight:600; text-align:center;
-    border:1px solid var(--border); background:var(--white); cursor:pointer;
-    font-family:var(--font); color:var(--text-3); transition:all 0.15s; position:relative;
+  /* Targeting type radio buttons */
+  .tgt-radios { display:flex; align-items:center; gap:20px; padding:0 0 14px 0; margin-bottom:10px; }
+  .tgt-radio-opt { display:flex; align-items:center; gap:7px; cursor:pointer; font-size:12px; font-weight:500; color:var(--text-2); }
+  .tgt-radio-opt.active { color:var(--text); }
+  .tgt-radio-dot {
+    width:15px; height:15px; border-radius:50%; border:2px solid var(--border-mid);
+    background:var(--white); display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; transition:all 0.15s;
   }
-  .pill-tab:first-child { border-radius:var(--r-sm) 0 0 var(--r-sm); border-right:none; }
-  .pill-tab:last-child  { border-radius:0 var(--r-sm) var(--r-sm) 0; }
-  .pill-tab.active { background:var(--blue-light); color:var(--blue); border-color:var(--blue); }
+  .tgt-radio-opt.active .tgt-radio-dot { border-color:var(--blue); background:var(--blue); }
+  .tgt-radio-inner { width:5px; height:5px; border-radius:50%; background:var(--white); display:none; }
+  .tgt-radio-opt.active .tgt-radio-inner { display:block; }
 
-  /* Sub-source tabs (AI Recommended | Manual Upload) */
-  .src-tabs { display:flex; border-bottom:1px solid var(--border); }
-  .src-tab { padding:6px 12px 7px; font-size:11px; font-weight:600; border:none; background:none; cursor:pointer; color:var(--text-3); font-family:var(--font); border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.15s; }
-  .src-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+  /* Inner box wrapping toggle + content */
+  .tgt-inner-box { border:1px solid var(--border); border-radius:var(--r); overflow:hidden; min-height:320px; }
+
+  /* Product row */
+  .prod-row { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:none; transition:background 0.1s; }
+  .prod-row:hover { background:#fafbff; }
+  .prod-row:last-child { border-bottom:none; }
+  .prod-thumb { width:32px; height:32px; border-radius:4px; background:var(--bg); border:1px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .prod-thumb svg { width:14px; height:14px; stroke:var(--text-3); fill:none; stroke-width:1.5; }
+  .prod-info { flex:1; min-width:0; }
+  .prod-name { font-size:11.5px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .prod-sku { font-size:10px; color:var(--blue); margin-top:2px; }
+  .prod-add-btn {
+    width:22px; height:22px; border-radius:50%; border:1.5px solid var(--blue);
+    background:none; color:var(--blue); cursor:pointer; font-size:16px; font-family:var(--font);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; line-height:1;
+  }
+  .prod-add-btn:hover { background:var(--blue); color:var(--white); }
+
+  /* Pagination */
+  .prod-pagination { display:flex; align-items:center; justify-content:center; gap:4px; padding:8px; }
+  .prod-page-btn { min-width:26px; height:26px; border:1px solid var(--border); border-radius:4px; background:var(--white); font-size:11px; color:var(--text-2); cursor:pointer; font-family:var(--font); display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+  .prod-page-btn.active { background:var(--blue); color:var(--white); border-color:var(--blue); }
+  .prod-page-btn:hover:not(.active) { background:var(--bg); }
+
+  /* Sub-source tabs — Exact/Phrase pill style */
+  .src-tabs { display:flex; gap:5px; padding:8px 12px; border-bottom:1px solid var(--border); background:var(--white); }
+  .src-tab { padding:3px 11px; font-size:10.5px; font-weight:600; border-radius:99px; border:1.5px solid var(--border-mid); background:var(--white); cursor:pointer; color:var(--text-3); font-family:var(--font); transition:all 0.15s; }
+  .src-tab.active { background:var(--white); color:var(--blue); border-color:var(--blue); }
+  .src-tab:hover:not(.active) { border-color:var(--blue); color:var(--blue); }
 
   /* Search + sort row */
-  .kw-search-sort { display:flex; align-items:center; gap:6px; padding:7px 10px; border-bottom:1px solid var(--border); }
-  .kw-srch { display:flex; align-items:center; gap:5px; flex:1; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-sm); padding:5px 8px; }
+  .kw-search-sort { display:flex; align-items:center; gap:6px; padding:7px 10px; }
+  .kw-srch { display:flex; align-items:center; gap:5px; flex:1; background:var(--bg); border:none; border-radius:var(--r-sm); padding:5px 8px; }
   .kw-srch svg { width:11px; height:11px; stroke:var(--text-3); fill:none; stroke-width:2; }
   .kw-srch input { border:none; background:none; font-size:11.5px; font-family:var(--font); color:var(--text); outline:none; width:100%; }
   .kw-srch input::placeholder { color:var(--text-3); }
@@ -986,20 +1206,17 @@
   .sort-btn svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2.5; }
 
   /* Keyword row (left) */
-  .kw-row { display:flex; align-items:center; gap:6px; padding:8px 10px; border-bottom:1px solid var(--border); transition:background 0.1s; }
+  .kw-row { display:flex; align-items:center; gap:6px; padding:8px 10px; border-bottom:none; transition:background 0.1s; }
   .kw-row:hover { background:#fafbff; }
   .kw-row:last-child { border-bottom:none; }
   .kw-row-info { flex:1; min-width:0; }
   .kw-row-name { font-size:11.5px; font-weight:500; color:var(--text); }
   .kw-row-vol  { font-size:10px; color:var(--text-3); margin-top:1px; }
-  .kw-pill { font-size:10px; font-weight:700; padding:3px 8px; border-radius:3px; cursor:pointer; border:1px solid; transition:all 0.15s; white-space:nowrap; }
-  .kw-pill.exact  { color:#1565C0; border-color:#90CAF9; background:#E3F2FD; }
-  .kw-pill.exact:hover  { background:#1565C0; color:white; }
-  .kw-pill.phrase { color:#6A1B9A; border-color:#CE93D8; background:#F3E5F5; }
-  .kw-pill.phrase:hover { background:#6A1B9A; color:white; }
+  .kw-pill { font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; cursor:pointer; border:1px solid var(--border-mid); background:var(--white); color:var(--text-2); transition:all 0.15s; white-space:nowrap; }
+  .kw-pill:hover { background:var(--blue-light); color:var(--blue); border-color:var(--blue); }
 
   /* Category row (left) */
-  .cat-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border); transition:background 0.1s; }
+  .cat-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:none; transition:background 0.1s; }
   .cat-row:hover { background:#fafbff; }
   .cat-row:last-child { border-bottom:none; }
   .cat-chevron { font-size:11px; color:var(--text-3); cursor:pointer; width:14px; flex-shrink:0; }
@@ -1034,10 +1251,11 @@
   .kw-right-hdr { padding:8px 12px; border-bottom:1px solid var(--border); background:var(--bg); border-radius:var(--r) var(--r) 0 0; }
   .kw-right-hdr-row1 { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
 
-  /* Filter tabs */
-  .kw-filter-tabs { display:flex; gap:0; }
-  .kw-filter-tab { padding:3px 10px 4px; font-size:11px; font-weight:600; border:none; background:none; cursor:pointer; color:var(--text-3); font-family:var(--font); border-bottom:2px solid transparent; transition:all 0.15s; }
-  .kw-filter-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+  /* Filter tabs — grey pill style like Section 2 */
+  .kw-filter-tabs { display:flex; gap:4px; background:var(--border); border-radius:var(--r-sm); padding:3px; }
+  .kw-filter-tab { padding:4px 10px; font-size:11px; font-weight:600; border:none; border-radius:var(--r-sm); background:transparent; cursor:pointer; color:var(--text-2); font-family:var(--font); transition:all 0.15s; }
+  .kw-filter-tab.active { background:var(--white); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,0.13); font-weight:700; }
+  .kw-filter-tab:hover:not(.active) { color:var(--text); }
 
   /* Selection action row */
   .kw-action-row { display:flex; align-items:center; gap:8px; }
@@ -1075,7 +1293,7 @@
   .btn-apply-confirm:hover { background:#3451d1; }
 
   /* Right panel body scroll */
-  .kw-right-body { overflow-y:auto; max-height:280px; flex:1; }
+  .kw-right-body { overflow-y:auto; max-height:280px; flex:1; background:var(--bg); }
   .kw-right-empty { padding:28px 16px; text-align:center; font-size:11px; color:var(--text-3); line-height:1.6; }
 
   /* Added keyword row */
@@ -1184,7 +1402,6 @@
   .tos-hint strong { color:var(--text-2); }
 
   /* ── SECTION 8: GENERAL SETTINGS ── */
-  .gs-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
   .gs-field { display:flex; flex-direction:column; gap:4px; }
   .gs-label {
     font-size:11px; font-weight:600; color:var(--text-2); letter-spacing:0.2px;
@@ -1200,10 +1417,15 @@
   .gs-input::placeholder { color:var(--text-3); }
   .gs-input:disabled { background:var(--bg); color:var(--text-3); cursor:not-allowed; }
 
-  /* Date row */
-  .gs-date-row { display:flex; align-items:center; gap:10px; }
-  .gs-date-row .gs-field { flex:1; }
-  .gs-date-wrap { position:relative; }
+  /* Floating label fields */
+  .gs-float-wrap { position:relative; }
+  .gs-float-label {
+    position:absolute; top:-8px; left:10px; z-index:1;
+    font-size:10.5px; font-weight:400; color:var(--text-2);
+    background:var(--white); padding:0 4px; letter-spacing:0.2px;
+    display:flex; align-items:center; gap:4px;
+  }
+  .gs-float-input { padding-top:10px; padding-bottom:10px; }
   .gs-date-wrap .gs-input { padding-right:32px; width:100%; }
   .gs-date-icon {
     position:absolute; right:10px; top:50%; transform:translateY(-50%);
@@ -1211,41 +1433,26 @@
   }
   .gs-date-icon svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
 
-  /* No end date checkbox */
-  .gs-no-end { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-2); font-weight:500; cursor:pointer; }
-  .gs-no-end input[type=checkbox] { accent-color:var(--blue); width:14px; height:14px; cursor:pointer; }
-
-  /* Marketplace readonly */
-  .gs-marketplace-val {
-    border:1px solid var(--border); border-radius:var(--r-sm);
-    padding:8px 11px; font-size:13px; font-family:var(--font);
-    color:var(--text-2); background:var(--bg); font-weight:500;
+  /* Group headers */
+  .gs-group { margin-top:20px; }
+  .gs-group-title {
+    font-size:13px; font-weight:700; color:var(--text);
+    margin-bottom:8px; display:flex; align-items:center;
   }
+  /* Sub-field label (Start Date / End Date) — muted */
+  .gs-field-label {
+    font-size:10.5px; font-weight:500; color:var(--text-3);
+    margin-bottom:4px; display:block;
+  }
+  /* No end date — smaller */
+  .gs-no-end { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-3); font-weight:400; cursor:pointer; }
+  .gs-no-end input[type=checkbox] { accent-color:var(--blue); width:13px; height:13px; cursor:pointer; }
 
-  /* Budget radio cards */
+  /* Divider */
   .gs-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
-  .gs-budget-options { display:flex; flex-direction:column; gap:10px; }
-  .gs-budget-card {
-    border:1.5px solid var(--border); border-radius:var(--r);
-    padding:13px 16px; cursor:pointer; transition:all 0.15s; background:var(--white);
-  }
-  .gs-budget-card.selected { border-color:var(--blue); background:var(--white); }
-  .gs-budget-card-top { display:flex; align-items:flex-start; gap:10px; }
-  .gs-bud-radio {
-    width:16px; height:16px; border-radius:50%; border:2px solid var(--border-mid);
-    background:var(--white); display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; margin-top:2px; transition:all 0.15s;
-  }
-  .gs-budget-card.selected .gs-bud-radio { border-color:var(--blue); background:var(--blue); }
-  .gs-bud-radio-dot { width:6px; height:6px; border-radius:50%; background:white; display:none; }
-  .gs-budget-card.selected .gs-bud-radio-dot { display:block; }
-  .gs-bud-body h4 { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
-  .gs-bud-body p  { font-size:11.5px; color:var(--text-2); line-height:1.5; }
 
-  /* Daily budget input shown when Campaign Budget selected */
-  .gs-daily-budget-expand { display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border-mid); }
-  .gs-budget-card.selected .gs-daily-budget-expand { display:block; }
-  .gs-daily-row { display:flex; align-items:center; gap:0; max-width:200px; }
+  /* Daily budget input */
+  .gs-daily-row { display:flex; align-items:center; gap:0; max-width:260px; }
   .gs-daily-prefix {
     padding:7px 10px; background:var(--bg); border:1px solid var(--border);
     border-right:none; border-radius:var(--r-sm) 0 0 var(--r-sm);
@@ -1254,10 +1461,9 @@
   .gs-daily-inp {
     border:1px solid var(--border); border-radius:0 var(--r-sm) var(--r-sm) 0;
     padding:7px 10px; font-size:13px; font-family:var(--font);
-    color:var(--text); outline:none; width:110px; transition:border-color 0.15s;
+    color:var(--text); outline:none; width:220px; transition:border-color 0.15s;
   }
   .gs-daily-inp:focus { border-color:var(--blue); }
-  .gs-daily-hint { font-size:10.5px; color:var(--text-3); margin-top:4px; }
 
 
   /* ── S2 ENHANCEMENT: TABS ── */
@@ -1295,7 +1501,6 @@
     justify-content: center; padding: 32px 20px;
     border: 1.5px dashed var(--border-mid); border-radius: var(--r);
     background: var(--bg); text-align: center; gap: 10px;
-    grid-column: 1 / -1;
   }
   .prod-locked.show { display: flex; }
   .prod-locked svg { width: 28px; height: 28px; stroke: var(--text-3); fill: none; stroke-width: 1.5; }
@@ -1316,11 +1521,11 @@
   }
   .prod-flow-arrow svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-  /* Override product-layout to include arrow column */
+  /* Override product-layout — new 3fr 2fr layout */
   .product-layout {
     display: grid;
-    grid-template-columns: 1fr 28px 1fr;
-    gap: 0 10px;
+    grid-template-columns: 3fr 2fr;
+    gap: 14px;
     align-items: start;
   }
 
@@ -1342,27 +1547,28 @@
     margin-top: 4px;
   }
 
-  /* ── S2 ENHANCEMENT: ADD BUTTON WITH TEXT ── */
+  /* ── S2 ENHANCEMENT: ADD BUTTON — minimal + icon ── */
   .prod-action.add {
-    display: flex; align-items: center; gap: 0;
-    background: var(--blue-light); color: var(--blue);
-    border: 1.5px solid var(--blue-mid); border-radius: 99px;
-    padding: 5px 14px;
-    font-size: 12px; font-weight: 700; font-family: var(--font);
-    cursor: pointer; transition: all 0.15s; flex-shrink: 0;
-    letter-spacing: 0.2px;
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; padding: 0;
+    background: none; color: var(--text-3);
+    border: 1.5px solid var(--border); border-radius: 50%;
+    font-size: 16px; font-weight: 300; line-height: 1;
+    font-family: var(--font); cursor: pointer;
+    transition: all 0.15s; flex-shrink: 0;
   }
-  .prod-action.add:hover { background: var(--blue); color: white; border-color: var(--blue); }
+  .prod-action.add:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
 
   /* Right panel header — plain bold text */
   .right-panel-hdr {
-    font-size: 13px; font-weight: 700; color: var(--text);
-    padding: 8px 0 10px; display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: var(--text);
+    padding: 8px 12px 8px; display: flex; align-items: center; gap: 4px;
+    border-bottom: 1px solid var(--border);
   }
   .right-panel-hdr .count-pill {
-    background: var(--blue); color: white;
-    font-size: 11px; font-weight: 700; padding: 1px 8px;
-    border-radius: 99px;
+    background: none; color: var(--text-3);
+    font-size: 12px; font-weight: 400; padding: 0;
+    border-radius: 0;
   }
 
   /* fade in */
@@ -1478,34 +1684,24 @@
 
   <!-- ═══════ SECTION 2: PRODUCT SELECTION ═══════ -->
   <div class="card" id="section-products">
-    <div class="card-title">
-      2. Product Selection<span class="req">*</span>
-      <div class="tooltip-wrap">
+    <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+      <span>2. Product Selection<span class="req">*</span>
+      <div class="tooltip-wrap" style="display:inline-block;">
         <span class="info-icon">i</span>
         <div class="tooltip-box">
           <strong>Choose what to Promote?</strong><br>
-          Select products manually from your catalog or upload a bulk SKU file to include in your campaign.
+          Select products from your catalog or upload a bulk SKU file to include in your campaign.
         </div>
-      </div>
+      </div></span>
+      <button id="tab-bulk-link" onclick="switchTab('bulk')" style="font-size:11px;font-weight:500;color:var(--text-2);background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 10px;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:5px;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-2)';">
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Bulk upload
+      </button>
     </div>
     <p class="card-sub">Choose the products you want to feature in this campaign.</p>
-
-    <!-- ── TABS — card style with title + description ── -->
-    <div class="tab-bar">
-      <button class="tab-btn active" id="tab-manual" onclick="switchTab('manual')">
-        <div class="tab-btn-top">
-          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          <span class="tab-btn-title">Manual Selection</span>
-        </div>
-        <span class="tab-btn-desc">Browse and pick products one by one from your catalog</span>
-      </button>
-      <button class="tab-btn" id="tab-bulk" onclick="switchTab('bulk')">
-        <div class="tab-btn-top">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <span class="tab-btn-title">Bulk Upload</span>
-        </div>
-        <span class="tab-btn-desc">Upload a CSV file or paste SKUs to add products in bulk</span>
-      </button>
+    <!-- back to list link — hidden by default, shown in bulk mode -->
+    <div id="back-to-list" style="display:none;margin-bottom:10px;">
+      <span onclick="switchTab('rec')" style="font-size:11px;color:var(--blue);cursor:pointer;font-weight:600;">← Back to product list</span>
     </div>
 
     <!-- ── SELLER LOCK STATE ── -->
@@ -1518,49 +1714,44 @@
       </span>
     </div>
 
-    <!-- ── MANUAL SELECTION ── -->
-    <div id="pane-manual">
+    <!-- ── RECOMMENDED TAB ── -->
+    <div id="pane-rec">
       <div class="product-layout">
-
-        <!-- LEFT: catalog -->
+        <!-- LEFT: unified product list -->
         <div class="prod-panel">
-          <div class="prod-panel-header" style="font-size:11px;color:var(--text-3);font-weight:500;">
-            Available Products
-          </div>
-          <div class="prod-search-row">
-            <div class="prod-search">
-              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" id="prod-search-input" placeholder="Search by SKU name" oninput="filterProducts()">
+          <!-- ONE unified header block: search · pills · desc+addall -->
+          <div style="border-bottom:1px solid var(--border);flex-shrink:0;padding:10px 12px 0;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+              <div class="prod-search" style="flex:1;">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="prod-search-input" placeholder="Search by SKU name" oninput="filterUnified()">
+              </div>
+              <button class="btn-filter" onclick="toggleFilter()">
+                <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filter
+              </button>
             </div>
-            <button class="btn-filter" onclick="toggleFilter()">
-              <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              Filter
-            </button>
+            <div id="cat-pill-bar" style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-bottom:6px;"></div>
+            <div id="cat-desc-bar" style="display:none;padding-bottom:8px;"></div>
           </div>
-          <div class="prod-list" id="prod-list-left"></div>
+          <!-- Unified product list -->
+          <div class="prod-list" id="prod-list-unified" style="max-height:380px;"></div>
         </div>
-
-        <!-- FLOW ARROW -->
-        <div class="prod-flow-arrow" style="padding-top:120px;">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
-        </div>
-
-        <!-- RIGHT: selected -->
-        <div class="prod-panel" style="border:none;background:none;box-shadow:none;">
+        <!-- RIGHT: shared selected panel -->
+        <div class="prod-panel" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);">
           <div class="right-panel-hdr">
             Products Selected
-            <span class="count-pill" id="selected-count">0</span>
+            <span class="count-pill" id="selected-count">(0)</span>
           </div>
-          <div id="prod-list-right" style="overflow-y:auto;max-height:340px;">
+          <div id="prod-list-right" style="overflow-y:auto;max-height:380px;">
             <div class="prod-empty" id="prod-empty-state">
               <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
               <div class="prod-empty-title">No products added yet</div>
-              <p>Use the catalog on the left to browse and add products to your campaign.</p>
+              <p>Pre-selected picks will appear here automatically.</p>
               <span class="prod-empty-cta">← Click "+ Add" on any product</span>
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -1610,19 +1801,13 @@
             </button>
           </div>
         </div>
-
-        <!-- FLOW ARROW -->
-        <div class="prod-flow-arrow" style="padding-top:80px;">
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
-        </div>
-
-        <!-- RIGHT: selected -->
-        <div class="prod-panel" style="border:none;background:none;box-shadow:none;">
+<!-- RIGHT: shared mirror -->
+        <div class="prod-panel" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);">
           <div class="right-panel-hdr">
             Products Selected
-            <span class="count-pill" id="selected-count-bulk">0</span>
+            <span class="count-pill" id="selected-count-bulk">(0)</span>
           </div>
-          <div id="prod-list-right-bulk" style="overflow-y:auto;max-height:340px;">
+          <div id="prod-list-right-bulk-mirror" style="overflow-y:auto;max-height:340px;">
             <div class="prod-empty" id="prod-empty-bulk">
               <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               <div class="prod-empty-title">No products added yet</div>
@@ -1637,40 +1822,6 @@
   </div>
 
   <!-- ═══════ SECTION 3   </div>
-  </div>
-
-  <!-- ═══════ SECTION 3: PRICING MODEL ═══════ -->
-  <div class="card" id="section-pricing">
-    <div class="card-title">
-      3. Pricing Model
-      <div class="tooltip-wrap">
-        <span class="info-icon">i</span>
-        <div class="tooltip-box">
-          <strong>Pricing Model</strong><br>
-          Choose how you want to be charged for your ads. CPC charges you per click received.
-        </div>
-      </div>
-    </div>
-    <p class="card-sub">Select the pricing model for this campaign.</p>
-
-    <div class="pricing-options">
-      <!-- CPC — selected by default -->
-      <div class="pricing-card selected" id="price-cpc" onclick="selectPricing('cpc')">
-        <div class="pricing-card-top">
-          <span class="pricing-card-label">Cost Per Click (CPC)</span>
-          <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
-        </div>
-        <div class="pricing-card-desc">You are charged each time a shopper clicks on your ad. Ideal for driving traffic directly to your products.</div>
-      </div>
-      <!-- CPS — greyed out / coming soon -->
-      <div class="pricing-card disabled" id="price-cps">
-        <div class="pricing-card-top">
-          <span class="pricing-card-label">Cost Per Sale (CPS) <span class="pricing-soon-badge">Coming Soon</span></span>
-          <div class="pricing-radio"><div class="pricing-radio-dot"></div></div>
-        </div>
-        <div class="pricing-card-desc">You are charged only when a sale is made directly attributed to your ad. Pay for results, not clicks.</div>
-      </div>
-    </div>
   </div>
 
   </div>
@@ -1703,10 +1854,8 @@
                 Best for growth
               </span>
             </div>
-            <span class="bid-recommended-badge">Recommended</span>
           </div>
-          <div class="bid-desc">We bid up to 2x for top placements and scale back during low competition to ensure your budget goes where it counts.</div>
-          <div class="bid-example">Example: With a AED 1.00 bid, we may raise it to AED 2.00 for high-value placements or lower it to the minimum.</div>
+          <div class="bid-desc">Automatically scales bids up to 2x at top placements and pulls back when competition is low.</div>
         </div>
       </div>
 
@@ -1723,8 +1872,7 @@
               </span>
             </div>
           </div>
-          <div class="bid-desc">We lower your bids when competition is low to help you spend your budget more efficiently.</div>
-          <div class="bid-example">Example: With a AED 1.00 bid, we may lower it for low-probability clicks, but we will never exceed AED 1.00.</div>
+          <div class="bid-desc">Lowers bids when competition drops — never exceeds your set amount.</div>
         </div>
       </div>
 
@@ -1733,8 +1881,7 @@
         <div class="bid-radio"><div class="bid-radio-dot"></div></div>
         <div class="bid-body">
           <div class="bid-title">Fixed</div>
-          <div class="bid-desc">Set your default bid amount. You'll bid that specific value for every click without any real-time adjustments.</div>
-          <div class="bid-example">Example: With a AED 1.00 bid, you will bid exactly AED 1.00 for every auction, regardless of conversion likelihood.</div>
+          <div class="bid-desc">Your exact bid, every time. No real-time adjustments.</div>
         </div>
       </div>
 
@@ -1825,31 +1972,39 @@
     </div>
     <p class="card-sub">Choose how you want to target your ads.</p>
 
-    <!-- CARD-STYLE TABS — matching Section 2 construct -->
+    <!-- VERTICAL RADIO SELECTOR -->
     <div class="tgt-tab-bar">
-      <button class="tgt-tab-btn active" id="seg-auto" onclick="selectTgt('auto')">
-        <div class="tgt-tab-top">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          <span class="tgt-tab-title">Auto Targeting</span>
+      <div class="tgt-tab-btn active" id="seg-auto" onclick="selectTgt('auto')">
+        <div class="tgt-radio-bullet"><div class="tgt-radio-bullet-inner"></div></div>
+        <div class="tgt-tab-body">
+          <div class="tgt-tab-title">Auto Targeting</div>
+          <div class="tgt-tab-desc">Noon automatically matches your ads with the most relevant placements.</div>
         </div>
-        <span class="tgt-tab-desc">Noon automatically matches your ads with the most relevant placements</span>
-      </button>
-      <button class="tgt-tab-btn" id="seg-manual" onclick="selectTgt('manual')">
-        <div class="tgt-tab-top">
-          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          <span class="tgt-tab-title">Manual Targeting</span>
-          <span class="tgt-locked-badge" id="tgt-locked-badge" style="display:none;">
-            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Unavailable
-          </span>
+      </div>
+      <div class="tgt-tab-btn" id="seg-manual" onclick="selectTgt('manual')">
+        <div class="tgt-radio-bullet"><div class="tgt-radio-bullet-inner"></div></div>
+        <div class="tgt-tab-body">
+          <div class="tgt-tab-title-row">
+            <span class="tgt-tab-title">Manual Targeting</span>
+            <span class="tgt-locked-badge" id="tgt-locked-badge" style="display:none;">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Unavailable
+            </span>
+          </div>
+          <div class="tgt-tab-desc">Select specific keywords, products or categories to target your audience.</div>
+          <div class="tgt-locked-hint" id="tgt-locked-hint" style="display:none;">Available in Dynamic Bid (Down Only) or Fixed Bidding</div>
         </div>
-        <span class="tgt-tab-desc">Select specific keywords or categories to reach your target audience</span>
-        <span class="tgt-locked-hint" id="tgt-locked-hint" style="display:none;">Requires Dynamic Bid (Down Only) or Fixed</span>
-      </button>
+      </div>
     </div>
 
-    <!-- AUTO PANEL -->
-    <div class="tgt-panel active" id="tgt-panel-auto">
+    <!-- AUTO PANEL BOX -->
+    <div class="tgt-panel-box active" id="tgt-panel-auto">
+      <div class="tgt-panel-box-title">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Auto Targeting Settings
+      </div>
+      <div class="tgt-panel-box-body">
+        <div class="tgt-panel tgt-panel-auto-inner active">
 
       <!-- Set Default Bid — 5.3 -->
       <div class="tgt-bid-header">
@@ -1857,116 +2012,60 @@
         <p>This can be adjusted later in real-time based on your chosen bidding strategy.</p>
       </div>
 
-      <!-- 5.7 — Bid mode radio cards matching Section 4 -->
-      <div class="bid-mode-cards">
-
-        <!-- Single Bid card -->
-        <div class="bid-mode-card selected" id="bmc-amount">
-          <div class="bid-mode-radio"><div class="bid-mode-radio-dot"></div></div>
-          <div class="bid-mode-body">
-            <div class="bid-mode-title">Default Bid Amount</div>
-            <div class="bid-mode-desc">Set a single bid applied equally across all placement types.</div>
-            <div class="bid-mode-expand">
-              <div class="bid-field-wrap">
-                <span class="bid-field-label">Bid Amount</span>
-                <div class="bid-field-row">
-                  <span class="bid-pfx">&#x62F;</span>
-                  <input class="bid-inp" id="auto-bid-inp" type="number" placeholder="0.00" min="0.21" step="0.01" onclick="event.stopPropagation()">
-                </div>
-                <span class="bid-hint">Minimum &#x62F; 0.21</span>
-              </div>
-            </div>
-          </div>
+      <!-- Bid Amount — simple input -->
+      <div class="bid-field-wrap">
+        <span class="bid-field-label">Bid Amount</span>
+        <div class="bid-field-row">
+          <span class="bid-pfx">&#x62F;</span>
+          <input class="bid-inp" id="auto-bid-inp" type="number" placeholder="0.00" min="0.21" step="0.01">
         </div>
-
-        <!-- Bid by placement card -->
-        <div class="bid-mode-card" id="bmc-placement">
-          <div class="bid-mode-radio"><div class="bid-mode-radio-dot"></div></div>
-          <div class="bid-mode-body">
-            <div class="bid-title-row">
-              <div class="bid-title-left">
-                <span class="bid-mode-title">Default Bid by Placement</span>
-                <span class="bid-strategy-hint">
-                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-                  More control
-                </span>
-              </div>
-            </div>
-            <div class="bid-mode-desc">Set different bids for Keyword and Category placements individually.</div>
-            <div class="bid-mode-expand">
-
-              <!-- 5.8 — Two column checkbox layout, no boxes -->
-              <div class="plc-cols">
-
-                <!-- Keyword column -->
-                <div class="plc-col" id="plc-col-kw">
-                  <label class="plc-col-label">
-                    <input type="checkbox" id="chk-kw" checked>
-                    <span>Keyword</span>
-                    <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
-                  </label>
-                  <div class="plc-col-body" id="plc-col-body-kw">
-                    <div class="bid-field-row" style="margin-bottom:5px;">
-                      <span class="bid-pfx">&#x62F;</span>
-                      <input class="bid-inp" id="inp-kw" type="number" placeholder="0.00">
-                    </div>
-                    <div class="plc-range">
-                      Recommended Range between <span class="plc-range-vals">&#x62F; 0.30 - &#x62F; 0.36</span>
-                      <span class="plc-range-why">Why this range ?</span>
-                      <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Category column -->
-                <div class="plc-col" id="plc-col-cat">
-                  <label class="plc-col-label">
-                    <input type="checkbox" id="chk-cat" checked>
-                    <span>Category</span>
-                    <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
-                  </label>
-                  <div class="plc-col-body" id="plc-col-body-cat">
-                    <div class="bid-field-row" style="margin-bottom:5px;">
-                      <span class="bid-pfx">&#x62F;</span>
-                      <input class="bid-inp" id="inp-cat" type="number" placeholder="0.00">
-                    </div>
-                    <div class="plc-range">
-                      Recommended Range between <span class="plc-range-vals">&#x62F; 0.30 - &#x62F; 0.36</span>
-                      <span class="plc-range-why">Why this range ?</span>
-                      <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-
+        <span class="bid-hint">Minimum &#x62F; 0.21</span>
       </div>
-    </div>
+        </div><!-- /tgt-panel-auto-inner -->
+      </div><!-- /tgt-panel-box-body -->
+    </div><!-- /tgt-panel-box auto -->
 
-    <!-- MANUAL PANEL -->
-    <div class="tgt-panel" id="tgt-panel-manual">
-      <div class="manual-cols">
+    <!-- MANUAL PANEL BOX -->
+    <div class="tgt-panel-box" id="tgt-panel-manual">
+      <div class="tgt-panel-box-title">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Manual Targeting Settings
+      </div>
+      <div class="tgt-panel-box-body-flush">
+      <div class="tgt-panel" id="tgt-panel-manual-inner">
+      <div class="manual-cols" style="padding:14px;">
 
         <!-- ── LEFT PANEL ── -->
         <div class="left-panel-box">
-          <div class="pill-tabs">
-            <button class="pill-tab active" id="pt-kw"  onclick="switchPillTab('kw')">Keywords</button>
-            <button class="pill-tab"        id="pt-cat" onclick="switchPillTab('cat')">Categories</button>
+
+          <!-- 3 radio buttons -->
+          <div class="tgt-radios">
+            <label class="tgt-radio-opt active" id="pt-kw" onclick="switchPillTab('kw')">
+              <div class="tgt-radio-dot" id="rd-kw"><div class="tgt-radio-inner"></div></div>
+              <span>Keywords</span>
+            </label>
+            <label class="tgt-radio-opt" id="pt-prod" onclick="switchPillTab('prod')">
+              <div class="tgt-radio-dot" id="rd-prod"><div class="tgt-radio-inner"></div></div>
+              <span>Products</span>
+            </label>
+            <label class="tgt-radio-opt" id="pt-cat" onclick="switchPillTab('cat')">
+              <div class="tgt-radio-dot" id="rd-cat"><div class="tgt-radio-inner"></div></div>
+              <span>Categories</span>
+            </label>
           </div>
+
+          <!-- Keywords pane -->
           <div id="pane-kw">
+            <div class="tgt-inner-box">
             <div class="src-tabs">
-              <button class="src-tab active" id="st-ai"     onclick="switchSrcTab('ai')">AI Recommended</button>
+              <button class="src-tab active" id="st-ai"     onclick="switchSrcTab('ai')">Recommended</button>
               <button class="src-tab"        id="st-manual" onclick="switchSrcTab('manual')">Manual Upload</button>
             </div>
             <div id="st-pane-ai">
               <div class="kw-search-sort">
                 <div class="kw-srch">
                   <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input type="text" placeholder="Search by SKU name" id="kw-srch-inp" oninput="filterKwList()">
+                  <input type="text" placeholder="Search keywords..." id="kw-srch-inp" oninput="filterKwList()">
                 </div>
                 <button class="sort-btn">Sort by Popularity <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
               </div>
@@ -1978,8 +2077,26 @@
                 <button class="btn-kw-add" onclick="addKwsFromPaste()">Add Keywords</button>
               </div>
             </div>
+            </div>
           </div>
+
+          <!-- Products pane -->
+          <div id="pane-prod" style="display:none;">
+            <div class="tgt-inner-box">
+            <div class="kw-search-sort">
+              <div class="kw-srch">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search by product name or SKU..." id="prod-srch-inp" oninput="filterProdList()">
+              </div>
+            </div>
+            <div class="left-scroll" id="prod-left-list"></div>
+            <div class="prod-pagination" id="prod-pagination"></div>
+            </div>
+          </div>
+
+          <!-- Categories pane -->
           <div id="pane-cat" style="display:none;">
+            <div class="tgt-inner-box">
             <div class="kw-search-sort" style="padding:8px 10px;">
               <div class="kw-srch">
                 <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1987,7 +2104,9 @@
               </div>
             </div>
             <div class="left-scroll" id="cat-left-list"></div>
+            </div>
           </div>
+
         </div>
 
         <!-- ── RIGHT PANEL ── -->
@@ -1995,9 +2114,10 @@
           <div class="kw-right-hdr">
             <div class="kw-right-hdr-row1">
               <div class="kw-filter-tabs">
-                <button class="kw-filter-tab active" id="krf-all" onclick="filterRight('all')">All Targets</button>
-                <button class="kw-filter-tab"        id="krf-kw"  onclick="filterRight('kw')">Keywords</button>
-                <button class="kw-filter-tab"        id="krf-cat" onclick="filterRight('cat')">Categories</button>
+                <button class="kw-filter-tab active" id="krf-all"  onclick="filterRight('all')">All Targets</button>
+                <button class="kw-filter-tab"        id="krf-kw"   onclick="filterRight('kw')">Keywords</button>
+                <button class="kw-filter-tab"        id="krf-prod" onclick="filterRight('prod')">Products</button>
+                <button class="kw-filter-tab"        id="krf-cat"  onclick="filterRight('cat')">Categories</button>
               </div>
             </div>
             <div class="kw-action-row">
@@ -2023,7 +2143,9 @@
         </div>
 
       </div>
-    </div>
+      </div><!-- /tgt-panel-manual-inner -->
+      </div><!-- /tgt-panel-box-body-flush -->
+    </div><!-- /tgt-panel-box manual -->
   </div>
 
 
@@ -2136,93 +2258,63 @@
         <span class="info-icon">i</span>
         <div class="tooltip-box" style="width:260px;">
           <strong>General Settings</strong><br><br>
-          Set your campaign name, schedule, marketplace and budget.
+          Set your campaign name, schedule and budget.
         </div>
       </div>
     </div>
 
-    <!-- Campaign Name + Marketplace -->
-    <div class="gs-grid-2">
-      <div class="gs-field">
-        <label class="gs-label">Campaign Name <span class="req">*</span></label>
-        <input class="gs-input" type="text" placeholder="Ramadan 2026 Campaign" id="gs-camp-name">
-      </div>
-      <div class="gs-field">
-        <label class="gs-label">Marketplace</label>
-        <div class="gs-marketplace-val">NOON</div>
+    <!-- Group: Campaign Name -->
+    <div class="gs-group">
+      <div class="gs-group-title">Campaign Name</div>
+      <div class="gs-field" style="max-width:260px;">
+        <input class="gs-input" type="text" placeholder="Ramadan 2026 Campaign" id="gs-camp-name" style="width:100%;">
       </div>
     </div>
 
-    <!-- Start Date + End Date + No End Date checkbox -->
-    <div class="gs-grid-2" style="margin-bottom:8px;">
-      <div class="gs-field">
-        <label class="gs-label">Start Date <span class="req">*</span></label>
-        <div class="gs-date-wrap">
-          <input class="gs-input" type="text" id="gs-start-date" value="25 Mar 2025" readonly>
-          <span class="gs-date-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+    <!-- Group: Duration -->
+    <div class="gs-group">
+      <div class="gs-group-title">Duration</div>
+      <div class="gs-field" style="max-width:260px; margin-bottom:12px;">
+        <div class="gs-float-wrap">
+          <label class="gs-float-label">Start Date <span class="req">*</span></label>
+          <div class="gs-date-wrap">
+            <input class="gs-input gs-float-input" type="text" id="gs-start-date" value="25 Mar 2025" readonly>
+            <span class="gs-date-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          </div>
         </div>
       </div>
-      <div class="gs-field">
-        <label class="gs-label" style="justify-content:space-between;">
-          <span>End Date</span>
-          <label class="gs-no-end" onclick="event.stopPropagation()">
-            <input type="checkbox" id="gs-no-end" checked onchange="toggleNoEndDate(this.checked)"> No End Date
-          </label>
+      <div class="gs-field" style="max-width:260px;">
+        <div class="gs-float-wrap">
+          <label class="gs-float-label">End Date</label>
+          <div class="gs-date-wrap">
+            <input class="gs-input gs-float-input" type="text" id="gs-end-date" value="" disabled>
+            <span class="gs-date-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+          </div>
+        </div>
+        <label class="gs-no-end" style="margin-top:6px;" onclick="event.stopPropagation()">
+          <input type="checkbox" id="gs-no-end" checked onchange="toggleNoEndDate(this.checked)"> No End Date
         </label>
-        <div class="gs-date-wrap">
-          <input class="gs-input" type="text" id="gs-end-date" value="" disabled>
-          <span class="gs-date-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+      </div>
+    </div>
+
+    <!-- Group: Daily Budget -->
+    <div class="gs-group" style="margin-bottom:0;">
+      <div class="gs-group-title">Daily Budget
+        <div class="tooltip-wrap" style="display:inline-flex; margin-left:4px;">
+          <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
+          <div class="tooltip-box" style="width:260px;top:18px;">
+            The daily budget is not a fixed limit. During high-traffic periods, Noon may display your ads to multiple users, potentially exceeding the set budget. The maximum charge you may incur will be 15% above your set budget.
+          </div>
+        </div>
+      </div>
+      <div class="gs-field" style="max-width:260px;">
+        <div class="gs-daily-row">
+          <span class="gs-daily-prefix">&#x62F;</span>
+          <input class="gs-daily-inp" type="number" id="gs-daily-budget" placeholder="1000" min="0.1" step="0.1" value="1000">
         </div>
       </div>
     </div>
 
-    <hr class="gs-divider">
-
-    <!-- Shared Budget | Campaign Budget radio cards -->
-    <div class="gs-budget-options">
-
-      <!-- Shared Budget -->
-      <div class="gs-budget-card" id="gs-bud-shared" onclick="selectBudget('shared')">
-        <div class="gs-budget-card-top">
-          <div class="gs-bud-radio"><div class="gs-bud-radio-dot"></div></div>
-          <div class="gs-bud-body">
-            <h4>Shared Budget</h4>
-            <p>Distribute budget across multiple campaigns.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Campaign Budget (default selected) -->
-      <div class="gs-budget-card selected" id="gs-bud-campaign" onclick="selectBudget('campaign')">
-        <div class="gs-budget-card-top">
-          <div class="gs-bud-radio"><div class="gs-bud-radio-dot"></div></div>
-          <div class="gs-bud-body">
-            <h4>Campaign Budget</h4>
-            <p>Set a dedicated budget for this campaign.</p>
-          </div>
-        </div>
-        <!-- Daily budget — only visible when Campaign Budget selected -->
-        <div class="gs-daily-budget-expand">
-          <div class="gs-field" style="max-width:180px;">
-            <label class="gs-label">
-              Maximum Daily Budget
-              <div class="tooltip-wrap">
-                <span class="info-icon" style="width:13px;height:13px;font-size:8px;">i</span>
-                <div class="tooltip-box" style="width:260px;top:18px;">
-                  The daily budget is not a fixed limit. During high-traffic periods, Noon may display your ads to multiple users, potentially exceeding the set budget. The maximum charge you may incur will be 15% above your set budget.
-                </div>
-              </div>
-            </label>
-            <div class="gs-daily-row">
-              <span class="gs-daily-prefix">&#x62F;</span>
-              <input class="gs-daily-inp" type="number" id="gs-daily-budget" placeholder="1000" min="0.1" step="0.1" value="1000">
-            </div>
-            <div class="gs-daily-hint">Budget increase will be immediate (today)</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
   </div>
 
   <div class="placeholder-body"><span>Coming next →</span></div>
@@ -2275,107 +2367,340 @@
   // ══════════════════════════════
   // PRODUCT SELECTION
   // ══════════════════════════════
-  const allProducts = [
-    {id:'P001',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
-    {id:'P002',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
-    {id:'P003',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
-    {id:'P004',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
-    {id:'P005',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,800.00',badge:'express'},
-    {id:'P006',name:'Acti-Repair Cica Cream, Repairing and soothing cream, for face & body',price:'3,900.00',badge:'express'},
+
+  // ── Data ──
+  // All products sorted by relevance score (highest first)
+  // rec tags lowercase as requested
+  const allUnifiedProducts = [
+    {id:'R101', name:'Samsung Galaxy A15 128GB – Midnight Black',       price:'649.00',   recTag:'high potential',        recLabel:'high potential',        score:92},
+    {id:'R201', name:'Anker Soundcore Q35 Wireless Headphones',         price:'189.00',   recTag:'trending',              recLabel:'trending',               score:87},
+    {id:'R401', name:'Xiaomi 20000mAh Power Bank Pro – White',          price:'79.00',    recTag:'previously advertised', recLabel:'previously advertised',   score:84},
+    {id:'R102', name:'Dyson V11 Absolute Cordless Vacuum Cleaner',      price:'1,899.00', recTag:'high potential',        recLabel:'high potential',         score:81},
+    {id:'R402', name:'Philips Series 3000 Cordless Beard Trimmer',      price:'149.00',   recTag:'previously advertised', recLabel:'previously advertised',   score:78},
+    {id:'R202', name:'Instant Pot Duo 7-in-1 Electric Pressure Cooker', price:'349.00',   recTag:'trending',              recLabel:'trending',               score:75},
+    {id:'R103', name:'Apple AirPods Pro 2nd Generation',                price:'899.00',   recTag:'high potential',        recLabel:'high potential',         score:72},
+    {id:'R403', name:'Bosch Tassimo Happy Coffee Machine TAS1002',      price:'239.00',   recTag:'previously advertised', recLabel:'previously advertised',   score:70},
+    {id:'R203', name:'Garmin Forerunner 255 GPS Running Watch',         price:'1,099.00', recTag:'trending',              recLabel:'trending',               score:68},
+    {id:'R104', name:'Sony WH-1000XM5 Wireless Headphones',            price:'1,199.00', recTag:'high potential',        recLabel:'high potential',         score:65},
+    {id:'P001', name:'Acti-Repair Cica Cream, Repairing and soothing cream', price:'3,800.00', recTag:'', recLabel:'', score:0},
+    {id:'P002', name:'Neutrogena Hydro Boost Water Gel Moisturiser 50ml',    price:'85.00',    recTag:'', recLabel:'', score:0},
+    {id:'P003', name:'HP DeskJet 2720e All-in-One Wireless Printer',         price:'299.00',   recTag:'', recLabel:'', score:0},
+    {id:'P004', name:'Philips Series 3000 Cordless Beard Trimmer BT3226',    price:'149.00',   recTag:'', recLabel:'', score:0},
+    {id:'P005', name:'Nike Air Max 270 Running Shoes – Size 42',             price:'450.00',   recTag:'', recLabel:'', score:0},
+    {id:'P006', name:'LEGO Technic 4x4 Mercedes-Benz Zetros 42129',         price:'799.00',   recTag:'', recLabel:'', score:0},
+    {id:'P007', name:'Dyson V11 Absolute Cordless Vacuum Cleaner Pro',       price:'2,199.00', recTag:'', recLabel:'', score:0},
   ];
+
+  // 3 filter pills only
+  const filterPills = [
+    { id:'high potential',        label:'High Potential',        desc:'strong organic sales but no active ads.' },
+    { id:'trending',              label:'Trending',              desc:'search volume is spiking in your category.' },
+    { id:'previously advertised', label:'Previously Advertised', desc:'these products ran ads before and performed well.' },
+  ];
+
   const selectedProducts = [];
+  const preSelectedIds   = new Set();
+  let activeFilter       = null; // null = show all
+  let searchQuery        = '';
+
+  // ── Rec tag CSS class mapping ──
+  function recTagClass(tag) {
+    if (tag === 'high potential')        return 'high-potential';
+    if (tag === 'trending')              return 'trending';
+    if (tag === 'previously advertised') return 're-engage';
+    return '';
+  }
+
+  function recTagHTML(tag) {
+    if (!tag) return '';
+    return '<span class="rec-tag ' + recTagClass(tag) + '">' + tag + '</span>';
+  }
 
   function productThumb() {
     return '<div class="prod-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
   }
-  function checkSellerLock() {
-    const locked = document.getElementById('prod-locked');
-    const paneM  = document.getElementById('pane-manual');
-    const paneB  = document.getElementById('pane-bulk');
-    if (!locked) return;
-    const hasSellerr = sellers.length > 0;
-    locked.classList.toggle('show', !hasSellerr);
-    if (paneM) paneM.style.display  = hasSellerr ? (document.getElementById('tab-manual').classList.contains('active') ? 'block' : 'none') : 'none';
-    if (paneB) paneB.style.display  = hasSellerr ? (document.getElementById('tab-bulk').classList.contains('active')   ? 'block' : 'none') : 'none';
-    if (hasSellerr) renderLeftProducts();
+
+  // ── Pre-select top 5 high potential products ──
+  function initPreSelected() {
+    const topFive = allUnifiedProducts
+      .filter(function(p) { return p.recTag === 'high potential'; })
+      .slice(0, 5);
+    topFive.forEach(function(p) {
+      if (!selectedProducts.find(function(s) { return s.id === p.id; })) {
+        selectedProducts.push({...p});
+        preSelectedIds.add(p.id);
+      }
+    });
   }
 
-  function renderLeftProducts(filter) {
-    filter = filter || '';
-    const list = document.getElementById('prod-list-left');
-    if (!list) return;
-    const filtered = allProducts.filter(function(p) {
-      return !selectedProducts.find(function(s) { return s.id === p.id; }) &&
-             p.name.toLowerCase().includes(filter.toLowerCase());
+  // ── Filter pills — pills only ──
+  function renderCatPills() {
+    const bar = document.getElementById('cat-pill-bar');
+    if (!bar) return;
+    bar.innerHTML = '';
+
+    // ✦ Recommendations label
+    const recLabel = document.createElement('span');
+    recLabel.style.cssText = 'font-size:11px;font-weight:600;color:var(--text-2);white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;margin-right:4px;';
+    recLabel.innerHTML = '<span style="color:var(--rec);font-size:10px;">✦</span> Recommendations';
+    bar.appendChild(recLabel);
+
+    // Separator
+    const sep = document.createElement('span');
+    sep.style.cssText = 'color:var(--border-mid);font-size:12px;flex-shrink:0;margin:0 4px;line-height:1;';
+    sep.textContent = '|';
+    bar.appendChild(sep);
+
+    // 3 filter pills
+    filterPills.forEach(function(pill) {
+      const btn = document.createElement('button');
+      const isActive = activeFilter === pill.id;
+      btn.className = 'cat-pill' + (isActive ? ' active' : '');
+      if (isActive) {
+        btn.innerHTML = pill.label + ' <span style="margin-left:3px;font-size:11px;font-weight:400;opacity:0.7;">×</span>';
+      } else {
+        btn.textContent = pill.label;
+      }
+      btn.addEventListener('click', function() {
+        activeFilter = (activeFilter === pill.id) ? null : pill.id;
+        renderCatPills();
+        renderDescBar();
+        renderUnifiedList();
+      });
+      bar.appendChild(btn);
     });
-    if (!filtered.length) {
-      list.innerHTML = '<div class="prod-empty" style="min-height:120px;"><p>No products found matching your search.</p></div>';
+  }
+
+  function renderDescBar() {
+    const bar = document.getElementById('cat-desc-bar');
+    if (!bar) return;
+    if (!activeFilter) { bar.style.display = 'none'; bar.innerHTML = ''; return; }
+    const pill = filterPills.find(function(p) { return p.id === activeFilter; });
+    if (!pill) { bar.style.display = 'none'; return; }
+    bar.style.display = 'flex';
+    bar.style.alignItems = 'center';
+    bar.style.justifyContent = 'space-between';
+    bar.style.gap = '10px';
+    const unaddedCount = getFilteredProducts().filter(function(p) {
+      return !selectedProducts.find(function(s) { return s.id === p.id; });
+    }).length;
+    bar.innerHTML =
+      '<span style="font-size:11px;color:var(--text-3);font-style:italic;flex:1;">' + pill.desc + '</span>' +
+      '<button class="add-all-link" style="flex-shrink:0;" ' +
+        (unaddedCount === 0 ? 'disabled' : '') +
+        ' onclick="addAllFiltered()">' +
+        (unaddedCount === 0 ? '✓ All added' : 'Add all') +
+      '</button>';
+  }
+
+  function addAllFiltered() {
+    getFilteredProducts().forEach(function(p) {
+      if (!selectedProducts.find(function(s) { return s.id === p.id; })) {
+        selectedProducts.push({...p});
+      }
+    });
+    renderDescBar();
+    renderUnifiedList();
+    renderRightProducts();
+  }
+
+  // ── Unified product list ──
+  function getFilteredProducts() {
+    return allUnifiedProducts.filter(function(p) {
+      const matchesFilter = !activeFilter || p.recTag === activeFilter;
+      const matchesSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesFilter && matchesSearch;
+    });
+  }
+
+  function renderUnifiedList() {
+    const list = document.getElementById('prod-list-unified');
+    if (!list) return;
+    const products = getFilteredProducts();
+    list.innerHTML = '';
+    if (!products.length) {
+      list.innerHTML = '<div class="prod-empty" style="min-height:100px;"><p>No products found.</p></div>';
       return;
     }
-    list.innerHTML = '';
-    filtered.forEach(function(p) {
+    products.forEach(function(p) {
+      const isAdded = !!selectedProducts.find(function(s) { return s.id === p.id; });
       const div = document.createElement('div');
       div.className = 'prod-item';
-      div.id = 'left-' + p.id;
       div.innerHTML =
         productThumb() +
         '<div class="prod-info">' +
           '<div class="prod-name">' + p.name + '</div>' +
           '<div class="prod-meta">' +
             '<span class="prod-price">&#x62F; ' + p.price + '</span>' +
-            (p.badge ? '<span class="prod-badge">' + p.badge + '</span>' : '') +
+            recTagHTML(p.recTag) +
           '</div>' +
         '</div>';
       const btn = document.createElement('button');
-      btn.className = 'prod-action add';
-      btn.innerHTML = 'Add';
-      btn.addEventListener('click', function() { addProduct(p.id); });
+      btn.className = 'prod-action ' + (isAdded ? 'remove' : 'add');
+      btn.title = isAdded ? 'Remove' : 'Add';
+      btn.innerHTML = isAdded
+        ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>'
+        : '+';
+      btn.addEventListener('click', function() {
+        if (isAdded) {
+          removeProduct(p.id);
+        } else {
+          selectedProducts.push({...p});
+          renderUnifiedList();
+          renderRightProducts();
+        }
+      });
       div.appendChild(btn);
       list.appendChild(div);
     });
   }
+
+  function filterUnified() {
+    searchQuery = document.getElementById('prod-search-input') ? document.getElementById('prod-search-input').value : '';
+    renderUnifiedList();
+  }
+
+  // ── Right panel shared ──
+  function makeRecLabel() {
+    const lbl = document.createElement('div');
+    lbl.className = 'right-section-label rec-label';
+    lbl.style.cssText = 'display:flex;justify-content:space-between;align-items:center;';
+    const lblText = document.createElement('span');
+    lblText.style.cssText = 'display:inline-flex;align-items:center;gap:4px;';
+    lblText.innerHTML = '<span style="color:var(--rec);font-size:9px;">✦</span> Pre-selected recommended products';
+    const removeAll = document.createElement('button');
+    removeAll.textContent = 'Remove all';
+    removeAll.style.cssText = 'font-size:10px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:var(--font);font-weight:500;padding:0;text-decoration:underline;flex-shrink:0;';
+    removeAll.addEventListener('click', function() { removeAllPreSelected(); });
+    lbl.appendChild(lblText);
+    lbl.appendChild(removeAll);
+    return lbl;
+  }
+
+  function makeRightItem(p, isPreSel) {
+    const div = document.createElement('div');
+    div.className = 'prod-item';
+    if (isPreSel) div.style.background = 'var(--rec-light)';
+    div.innerHTML =
+      productThumb() +
+      '<div class="prod-info">' +
+        '<div class="prod-name" title="' + p.name + '">' + p.name + '</div>' +
+        '<div class="prod-meta">' +
+          '<span class="prod-price">&#x62F; ' + p.price + '</span>' +
+          recTagHTML(p.recTag) +
+        '</div>' +
+      '</div>';
+    const btn = document.createElement('button');
+    btn.className = 'prod-action remove';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+    btn.addEventListener('click', function() { removeProduct(p.id); });
+    div.appendChild(btn);
+    return div;
+  }
+
   function renderRightProducts() {
-    const right = document.getElementById('prod-list-right');
-    const empty = document.getElementById('prod-empty-state');
-    const countEl = document.getElementById('selected-count');
-    if (countEl) countEl.textContent = selectedProducts.length;
-    if (!selectedProducts.length) { empty.style.display = 'flex'; Array.from(right.querySelectorAll('.prod-item')).forEach(e => e.remove()); return; }
-    empty.style.display = 'none';
-    Array.from(right.querySelectorAll('.prod-item')).forEach(e => e.remove());
-    selectedProducts.forEach(p => {
-      const div = document.createElement('div');
-      div.className = 'prod-item';
-      div.innerHTML = productThumb() +
-        '<div class="prod-info"><div class="prod-name">' + p.name + '</div>' +
-        '<div class="prod-meta"><span class="prod-price">&#x62F; ' + p.price + '</span>' +
-        (p.badge ? '<span class="prod-badge">' + p.badge + '</span>' : '') + '</div></div>' +
-        '<button class="prod-action remove" data-id="' + p.id + '"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
-      div.querySelector('.prod-action.remove').addEventListener('click', () => removeProduct(p.id));
-      right.appendChild(div);
+    const right  = document.getElementById('prod-list-right');
+    const empty  = document.getElementById('prod-empty-state');
+    ['selected-count','selected-count-bulk'].forEach(function(id) {
+      const el = document.getElementById(id); if (el) el.textContent = '(' + selectedProducts.length + ')';
     });
+    syncMirrorPanel('prod-list-right-bulk-mirror', 'prod-empty-bulk');
+    if (!selectedProducts.length) {
+      empty.style.display = 'flex';
+      Array.from(right.querySelectorAll('.prod-item, .right-section-label')).forEach(function(e) { e.remove(); });
+      return;
+    }
+    empty.style.display = 'none';
+    Array.from(right.querySelectorAll('.prod-item, .right-section-label')).forEach(function(e) { e.remove(); });
+    const preItems  = selectedProducts.filter(function(p) { return preSelectedIds.has(p.id); });
+    const userItems = selectedProducts.filter(function(p) { return !preSelectedIds.has(p.id); });
+    if (preItems.length) {
+      right.appendChild(makeRecLabel());
+      preItems.forEach(function(p) { right.appendChild(makeRightItem(p, true)); });
+    }
+    if (userItems.length) {
+      const lbl = document.createElement('div'); lbl.className = 'right-section-label'; lbl.textContent = 'Added by you'; lbl.style.fontSize = '10px'; lbl.style.color = 'var(--text-3)'; lbl.style.fontWeight = '400';
+      right.appendChild(lbl);
+      userItems.forEach(function(p) { right.appendChild(makeRightItem(p, false)); });
+    }
   }
-  function addProduct(id) {
-    const prod = allProducts.find(p => p.id === id);
-    if (!prod || selectedProducts.find(s => s.id === id)) return;
-    selectedProducts.push({...prod});
-    renderLeftProducts(document.getElementById('prod-search-input') ? document.getElementById('prod-search-input').value : '');
-    renderRightProducts(); syncBulkRight();
+
+  function syncMirrorPanel(mirrorId, emptyId) {
+    const mirror = document.getElementById(mirrorId);
+    const empty  = document.getElementById(emptyId);
+    if (!mirror) return;
+    Array.from(mirror.querySelectorAll('.prod-item, .right-section-label')).forEach(function(e) { e.remove(); });
+    if (!selectedProducts.length) { if (empty) empty.style.display = 'flex'; return; }
+    if (empty) empty.style.display = 'none';
+    const preItems  = selectedProducts.filter(function(p) { return preSelectedIds.has(p.id); });
+    const userItems = selectedProducts.filter(function(p) { return !preSelectedIds.has(p.id); });
+    if (preItems.length) {
+      mirror.appendChild(makeRecLabel());
+      preItems.forEach(function(p) { mirror.appendChild(makeRightItem(p, true)); });
+    }
+    if (userItems.length) {
+      const lbl = document.createElement('div'); lbl.className = 'right-section-label'; lbl.textContent = 'Added by you'; lbl.style.fontSize = '10px'; lbl.style.color = 'var(--text-3)'; lbl.style.fontWeight = '400';
+      mirror.appendChild(lbl);
+      userItems.forEach(function(p) { mirror.appendChild(makeRightItem(p, false)); });
+    }
   }
+
   function removeProduct(id) {
-    const i = selectedProducts.findIndex(p => p.id === id);
-    if (i > -1) selectedProducts.splice(i, 1);
-    renderLeftProducts(document.getElementById('prod-search-input') ? document.getElementById('prod-search-input').value : '');
-    renderRightProducts(); syncBulkRight();
+    const i = selectedProducts.findIndex(function(p) { return p.id === id; });
+    if (i > -1) { selectedProducts.splice(i, 1); preSelectedIds.delete(id); }
+    renderDescBar();
+    renderUnifiedList();
+    renderRightProducts();
   }
-  function filterProducts() { renderLeftProducts(document.getElementById('prod-search-input').value); }
-  function toggleFilter() {}
+
+  function removeAllPreSelected() {
+    preSelectedIds.forEach(function(id) {
+      const i = selectedProducts.findIndex(function(p) { return p.id === id; });
+      if (i > -1) selectedProducts.splice(i, 1);
+    });
+    preSelectedIds.clear();
+    renderDescBar();
+    renderUnifiedList();
+    renderRightProducts();
+  }
+
+  function renderAll() {
+    renderCatPills();
+    renderDescBar();
+    renderUnifiedList();
+    renderRightProducts();
+  }
+
+  function checkSellerLock() {
+    const locked = document.getElementById('prod-locked');
+    const paneR  = document.getElementById('pane-rec');
+    const paneB  = document.getElementById('pane-bulk');
+    if (!locked) return;
+    const hasSeller = sellers.length > 0;
+    locked.classList.toggle('show', !hasSeller);
+    if (!hasSeller) {
+      if (paneR) paneR.style.display = 'none';
+      if (paneB) paneB.style.display = 'none';
+      return;
+    }
+    // Default: product list shown, bulk hidden
+    if (paneR) paneR.style.display = 'block';
+    if (paneB) paneB.style.display = 'none';
+    renderAll();
+  }
+
   function switchTab(tab) {
-    document.getElementById('pane-manual').style.display = tab === 'manual' ? 'block' : 'none';
-    document.getElementById('pane-bulk').style.display   = tab === 'bulk'   ? 'block' : 'none';
-    document.getElementById('tab-manual').classList.toggle('active', tab === 'manual');
-    document.getElementById('tab-bulk').classList.toggle('active',   tab === 'bulk');
-    if (tab === 'bulk') syncBulkRight();
+    document.getElementById('pane-rec').style.display  = tab === 'rec'  ? 'block' : 'none';
+    document.getElementById('pane-bulk').style.display = tab === 'bulk' ? 'block' : 'none';
+    var bulkLink = document.getElementById('tab-bulk-link');
+    var backLink = document.getElementById('back-to-list');
+    if (bulkLink) bulkLink.style.display = tab === 'rec'  ? 'flex'  : 'none';
+    if (backLink) backLink.style.display = tab === 'bulk' ? 'block' : 'none';
+    renderRightProducts();
   }
+
+  function filterProducts() { filterUnified(); }
+  function toggleFilter() {}
   function handleDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('dragover'); }
   function handleDragLeave() { document.getElementById('drop-zone').classList.remove('dragover'); }
   function handleDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('dragover'); const f = e.dataTransfer.files[0]; if (f) showUploadedFile(f.name); }
@@ -2384,33 +2709,15 @@
   function removeFile() { document.getElementById('uploaded-file').classList.remove('show'); document.getElementById('file-input').value = ''; }
   function processSKUs() {
     const raw = document.getElementById('sku-paste').value.trim();
-    if (!raw) { alert('Please enter some SKUs to process.'); return; }
-    raw.split(/[\s,\n]+/).filter(Boolean).forEach(sku => {
-      const prod = allProducts.find(p => p.id.toLowerCase() === sku.toLowerCase());
-      if (prod && !selectedProducts.find(s => s.id === prod.id)) selectedProducts.push({...prod});
+    if (!raw) { alert('Please enter some SKUs.'); return; }
+    raw.split(/[\s,\n]+/).filter(Boolean).forEach(function(sku) {
+      const prod = allUnifiedProducts.find(function(p) { return p.id.toLowerCase() === sku.toLowerCase(); });
+      if (prod && !selectedProducts.find(function(s) { return s.id === prod.id; })) selectedProducts.push({...prod});
     });
     document.getElementById('sku-paste').value = '';
-    syncBulkRight(); renderRightProducts();
-  }
-  function syncBulkRight() {
-    const right = document.getElementById('prod-list-right-bulk');
-    const empty = document.getElementById('prod-empty-bulk');
-    const countEl = document.getElementById('selected-count-bulk');
-    if (countEl) countEl.textContent = selectedProducts.length;
-    if (!selectedProducts.length) { if (empty) empty.style.display = 'flex'; Array.from(right ? right.querySelectorAll('.prod-item') : []).forEach(e => e.remove()); return; }
-    if (empty) empty.style.display = 'none';
-    if (!right) return;
-    Array.from(right.querySelectorAll('.prod-item')).forEach(e => e.remove());
-    selectedProducts.forEach(p => {
-      const div = document.createElement('div'); div.className = 'prod-item';
-      div.innerHTML = productThumb() + '<div class="prod-info"><div class="prod-name">' + p.name + '</div></div>' +
-        '<button class="prod-action remove" data-id="' + p.id + '"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/></svg></button>';
-      div.querySelector('.prod-action.remove').addEventListener('click', () => { const i = selectedProducts.findIndex(s => s.id === p.id); if (i > -1) selectedProducts.splice(i,1); syncBulkRight(); renderRightProducts(); });
-      right.appendChild(div);
-    });
+    renderRightProducts();
   }
   function downloadTemplate() { const a = document.createElement('a'); a.href = 'data:text/csv,SKU\nZG1JSICL\nSLSISO\nSOAXL'; a.download = 'bulk_sku_template.csv'; a.click(); }
-
   // ══════════════════════════════
   // PRICING MODEL
   // ══════════════════════════════
@@ -2475,11 +2782,66 @@
   }
 
   function switchPillTab(tab) {
-    const isKw = tab === 'kw';
-    document.getElementById('pane-kw').style.display  = isKw ? 'block' : 'none';
-    document.getElementById('pane-cat').style.display = isKw ? 'none'  : 'block';
-    document.getElementById('pt-kw').classList.toggle('active',  isKw);
-    document.getElementById('pt-cat').classList.toggle('active', !isKw);
+    ['kw','prod','cat'].forEach(t => {
+      document.getElementById('pane-' + t).style.display = t === tab ? 'block' : 'none';
+      document.getElementById('pt-' + t).classList.toggle('active', t === tab);
+    });
+    if (tab === 'prod') renderProdList(1);
+  }
+
+  /* ── Products mock data ── */
+  const PRODUCTS_DATA = [
+    { name:'Wireless Headphones Pro Max Noise Cancelling Bluetooth Over-Ear', sku:'Z28AF015D2B36185FACB3Z' },
+    { name:'Bluetooth Earphones Sports In-Ear Waterproof with Mic', sku:'Z3D4815CA119538E778EZ' },
+    { name:'Noise Cancelling Headphones Studio Edition Premium Sound', sku:'Z1095DCC06D68C10AFA1FZ' },
+    { name:'Over Ear Gaming Headset RGB 7.1 Surround Sound USB', sku:'Z601BA8EAA279D3736744Z' },
+    { name:'True Wireless Earbuds Active Noise Cancellation ANC', sku:'Z859FFD8B8ADD00B8D9CFZ' },
+    { name:'Gaming Headset Wired with Microphone PS4 Xbox PC', sku:'ZA12BC34DE56FG78HI90JZ' },
+    { name:'Portable Bluetooth Speaker 360 Sound Waterproof Outdoor', sku:'ZB23CD45EF67GH89IJ01KZ' },
+    { name:'Kids Headphones Volume Limited On-Ear Foldable Colourful', sku:'ZC34DE56FG78HI90JK12LZ' },
+    { name:'Studio Monitor Headphones Professional Mixing DJ', sku:'ZD45EF67GH89IJ01KL23MZ' },
+    { name:'Sleep Headphones Soft Headband Wireless Bluetooth Running', sku:'ZE56FG78HI90JK12LM34NZ' },
+  ];
+  const PROD_PER_PAGE = 5;
+  let prodCurrentPage = 1;
+
+  function renderProdList(page) {
+    prodCurrentPage = page;
+    const list = document.getElementById('prod-left-list');
+    const pag  = document.getElementById('prod-pagination');
+    if (!list) return;
+    const start = (page - 1) * PROD_PER_PAGE;
+    const items = PRODUCTS_DATA.slice(start, start + PROD_PER_PAGE);
+    list.innerHTML = items.map(p => `
+      <div class="prod-row">
+        <div class="prod-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="prod-info">
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-sku">${p.sku}</div>
+        </div>
+        <button class="prod-add-btn">+</button>
+      </div>`).join('');
+    const totalPages = Math.ceil(PRODUCTS_DATA.length / PROD_PER_PAGE);
+    pag.innerHTML = `<button class="prod-page-btn" onclick="renderProdList(${Math.max(1,page-1)})">&lt;</button>` +
+      [1,2,3,4,5].map(n => `<button class="prod-page-btn${n===page?' active':''}" onclick="renderProdList(${n})">${n}</button>`).join('') +
+      `<span style="font-size:11px;color:var(--text-3);padding:0 4px;">… ${totalPages}</span>` +
+      `<button class="prod-page-btn" onclick="renderProdList(${Math.min(totalPages,page+1)})">&gt;</button>`;
+  }
+
+  function filterProdList() {
+    const q = document.getElementById('prod-srch-inp').value.toLowerCase();
+    const list = document.getElementById('prod-left-list');
+    const filtered = PRODUCTS_DATA.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q));
+    list.innerHTML = filtered.map(p => `
+      <div class="prod-row">
+        <div class="prod-thumb"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="prod-info">
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-sku">${p.sku}</div>
+        </div>
+        <button class="prod-add-btn">+</button>
+      </div>`).join('');
+    document.getElementById('prod-pagination').innerHTML = '';
   }
 
   function switchSrcTab(src) {
@@ -2492,7 +2854,7 @@
 
   function filterRight(tab) {
     rightFilter = tab;
-    ['all','kw','cat'].forEach(t => document.getElementById('krf-' + t).classList.toggle('active', t === tab));
+    ['all','kw','prod','cat'].forEach(t => document.getElementById('krf-' + t).classList.toggle('active', t === tab));
     renderRight();
   }
 
@@ -2668,8 +3030,15 @@
   // ══════════════════════════════
   // INIT
   // ══════════════════════════════
-  renderLeftProducts();
-  renderRightProducts();
+  // Default partner ID
+  (function() {
+    if (!sellers.includes('9404')) {
+      sellers.push('9404');
+      renderTags();
+    }
+  }());
+  initPreSelected();
+  renderAll();
   checkSellerLock();
   // Dynamic Up&Down is default — disable Manual tab on load
   (function() {
